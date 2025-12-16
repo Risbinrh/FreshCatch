@@ -28,6 +28,8 @@ import {
   Settings
 } from 'lucide-react';
 import { APP_NAME, CUSTOMER_NAV_ITEMS, LANGUAGES } from '@/constants';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useCart } from '@/contexts/CartContext';
 
 interface UserData {
   id: string;
@@ -37,20 +39,12 @@ interface UserData {
   isLoggedIn: boolean;
 }
 
-interface HeaderProps {
-  cartItemCount?: number;
-  currentLanguage?: 'en' | 'ta';
-  onLanguageChange?: (lang: 'en' | 'ta') => void;
-}
-
-export function Header({
-  cartItemCount = 2,
-  currentLanguage = 'en',
-  onLanguageChange,
-}: HeaderProps) {
+export function Header() {
   const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [user, setUser] = useState<UserData | null>(null);
+  const { language, setLanguage } = useLanguage();
+  const { itemCount } = useCart();
 
   // Check localStorage for user on mount
   useEffect(() => {
@@ -66,6 +60,9 @@ export function Header({
 
   const handleLogout = () => {
     localStorage.removeItem('freshcatch_user');
+    localStorage.removeItem('freshcatch_admin');
+    // Clear cookie
+    document.cookie = 'freshcatch_user=; path=/; max-age=0';
     setUser(null);
     router.push('/');
   };
@@ -78,7 +75,7 @@ export function Header({
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
+          <Link href={isLoggedIn ? "/home" : "/"} className="flex items-center gap-2">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary">
               <Fish className="h-6 w-6 text-white" />
             </div>
@@ -93,7 +90,7 @@ export function Header({
                 href={item.href}
                 className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
               >
-                {currentLanguage === 'en' ? item.label : item.label_ta}
+                {language === 'en' ? item.label : item.label_ta}
               </Link>
             ))}
           </nav>
@@ -104,7 +101,7 @@ export function Header({
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <input
                 type="search"
-                placeholder={currentLanguage === 'en' ? 'Search for fish...' : 'மீன் தேடுங்கள்...'}
+                placeholder={language === 'en' ? 'Search for fish...' : 'மீன் தேடுங்கள்...'}
                 className="w-full rounded-full border bg-muted/50 py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
               />
             </div>
@@ -122,15 +119,15 @@ export function Header({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="gap-1">
-                  <span className="text-xs">{LANGUAGES[currentLanguage]}</span>
+                  <span className="text-xs">{LANGUAGES[language]}</span>
                   <ChevronDown className="h-3 w-3" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => onLanguageChange?.('en')}>
+                <DropdownMenuItem onClick={() => setLanguage('en')}>
                   English
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => onLanguageChange?.('ta')}>
+                <DropdownMenuItem onClick={() => setLanguage('ta')}>
                   தமிழ்
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -140,9 +137,9 @@ export function Header({
             <Link href="/cart">
               <Button variant="ghost" size="icon" className="relative">
                 <ShoppingCart className="h-5 w-5" />
-                {cartItemCount > 0 && (
+                {itemCount > 0 && (
                   <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs">
-                    {cartItemCount}
+                    {itemCount}
                   </Badge>
                 )}
               </Button>
@@ -235,7 +232,7 @@ export function Header({
                       onClick={() => setIsMobileMenuOpen(false)}
                       className="flex items-center gap-3 text-lg font-medium hover:text-primary transition-colors"
                     >
-                      {currentLanguage === 'en' ? item.label : item.label_ta}
+                      {language === 'en' ? item.label : item.label_ta}
                     </Link>
                   ))}
                   {isLoggedIn ? (

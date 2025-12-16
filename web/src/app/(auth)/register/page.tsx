@@ -51,8 +51,19 @@ export default function RegisterPage() {
       setStep(4);
     } else if (step === 4) {
       setIsLoading(true);
+      // Complete registration and set auth
+      const userData = {
+        id: 'user_' + formData.phone,
+        name: formData.name,
+        phone: '+91 ' + formData.phone,
+        email: formData.email,
+        isLoggedIn: true,
+      };
+      localStorage.setItem('freshcatch_user', JSON.stringify(userData));
+      // Set cookie for middleware
+      document.cookie = `freshcatch_user=${JSON.stringify(userData)}; path=/; max-age=${60 * 60 * 24 * 7}`; // 7 days
       setTimeout(() => {
-        window.location.href = '/';
+        window.location.href = '/home';
       }, 1500);
     }
   };
