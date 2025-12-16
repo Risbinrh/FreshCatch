@@ -21,9 +21,7 @@ import {
   Star,
   Heart,
   ShoppingCart,
-  SlidersHorizontal,
   X,
-  ChevronDown,
 } from 'lucide-react';
 import Link from 'next/link';
 import { MOCK_PRODUCTS } from '@/lib/mock-data';

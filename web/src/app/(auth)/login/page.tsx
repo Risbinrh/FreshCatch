@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
-import { Fish, Phone, ArrowRight, Loader2, CheckCircle, Zap, User } from 'lucide-react';
+import { Fish, ArrowRight, Loader2, CheckCircle, Zap, User } from 'lucide-react';
 import Link from 'next/link';
 import { APP_NAME } from '@/constants';
 

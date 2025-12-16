@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { Header, Footer } from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import {
@@ -20,7 +19,6 @@ import {
   Shield,
   Edit2,
 } from 'lucide-react';
-import Link from 'next/link';
 import { MOCK_CART, MOCK_USER } from '@/lib/mock-data';
 import { DELIVERY_SLOTS } from '@/constants';
 

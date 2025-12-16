@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Search,
   Play,
@@ -31,7 +30,7 @@ export default function RecipesPage() {
   const [selectedDifficulty, setSelectedDifficulty] = useState<string | null>(null);
   const [selectedCuisine, setSelectedCuisine] = useState<string | null>(null);
 
-  const cuisines = [...new Set(MOCK_RECIPES.map((r) => r.cuisine_type))];
+  const cuisines = Array.from(new Set(MOCK_RECIPES.map((r) => r.cuisine_type)));
 
   const filteredRecipes = useMemo(() => {
     return MOCK_RECIPES.filter((recipe) => {

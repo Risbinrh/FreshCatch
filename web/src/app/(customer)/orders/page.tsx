@@ -41,7 +41,7 @@ export default function OrdersPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
-      <Header cartItemCount={2} isLoggedIn userName="Priya" />
+      <Header cartItemCount={2} />
 
       <main className="flex-1">
         <div className="container mx-auto px-4 py-8">

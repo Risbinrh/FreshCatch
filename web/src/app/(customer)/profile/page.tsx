@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -43,7 +42,7 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
-      <Header cartItemCount={2} isLoggedIn userName={user.name} />
+      <Header cartItemCount={2} />
 
       <main className="flex-1">
         <div className="container mx-auto px-4 py-8">

@@ -7,7 +7,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import {
-  Package,
   Truck,
   CheckCircle,
   Clock,
@@ -40,7 +39,7 @@ export default function OrderDetailPage() {
       label: 'Order Confirmed',
       description: 'Seller has confirmed your order',
       time: '10:35 AM',
-      completed: order.order_status !== 'placed',
+      completed: true,
     },
     {
       status: 'processing',
@@ -67,7 +66,7 @@ export default function OrderDetailPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
-      <Header cartItemCount={2} isLoggedIn userName="Priya" />
+      <Header cartItemCount={2} />
 
       <main className="flex-1">
         <div className="container mx-auto px-4 py-8">

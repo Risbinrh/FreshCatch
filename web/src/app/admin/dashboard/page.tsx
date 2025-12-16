@@ -18,7 +18,7 @@ import {
   Eye,
 } from 'lucide-react';
 import Link from 'next/link';
-import { ADMIN_STATS, MOCK_ORDERS, MOCK_PRODUCTS } from '@/lib/mock-data';
+import { ADMIN_STATS, MOCK_ORDERS } from '@/lib/mock-data';
 
 const STAT_CARDS = [
   {
