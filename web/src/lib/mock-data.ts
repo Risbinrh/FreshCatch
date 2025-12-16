@@ -1,4 +1,5 @@
 // Comprehensive Mock Data for FreshCatch Demo
+import type { Recipe, Order } from '@/types';
 
 export const MOCK_PRODUCTS = [
   {
@@ -275,7 +276,7 @@ export const MOCK_PRODUCTS = [
   },
 ];
 
-export const MOCK_ORDERS = [
+export const MOCK_ORDERS: Order[] = [
   {
     id: 'ORD001',
     user_id: 'user1',
@@ -359,7 +360,7 @@ export const MOCK_ORDERS = [
   },
 ];
 
-export const MOCK_RECIPES = [
+export const MOCK_RECIPES: Recipe[] = [
   {
     id: '1',
     title_english: 'Meen Kulambu (Fish Curry)',
@@ -367,7 +368,7 @@ export const MOCK_RECIPES = [
     fish_product: MOCK_PRODUCTS[0],
     video_url: 'https://youtube.com/watch?v=example1',
     thumbnail: '/recipes/meen-kulambu.jpg',
-    description: 'Traditional Tamil Nadu style fish curry with tamarind and spices.',
+    content: 'Traditional Tamil Nadu style fish curry with tamarind and spices.',
     difficulty_level: 'medium' as const,
     cooking_time: 45,
     servings: 4,
@@ -400,7 +401,7 @@ export const MOCK_RECIPES = [
     fish_product: MOCK_PRODUCTS[2],
     video_url: 'https://youtube.com/watch?v=example2',
     thumbnail: '/recipes/prawn-biriyani.jpg',
-    description: 'Aromatic prawn biriyani with basmati rice and special spices.',
+    content: 'Aromatic prawn biriyani with basmati rice and special spices.',
     difficulty_level: 'hard' as const,
     cooking_time: 60,
     servings: 6,
@@ -430,7 +431,7 @@ export const MOCK_RECIPES = [
     fish_product: MOCK_PRODUCTS[1],
     video_url: 'https://youtube.com/watch?v=example3',
     thumbnail: '/recipes/fish-fry.jpg',
-    description: 'Crispy South Indian style fish fry with aromatic spices.',
+    content: 'Crispy South Indian style fish fry with aromatic spices.',
     difficulty_level: 'easy' as const,
     cooking_time: 25,
     servings: 4,
@@ -459,7 +460,7 @@ export const MOCK_RECIPES = [
     fish_product: MOCK_PRODUCTS[4],
     video_url: 'https://youtube.com/watch?v=example4',
     thumbnail: '/recipes/crab-masala.jpg',
-    description: 'Spicy Chettinad style crab masala with coconut.',
+    content: 'Spicy Chettinad style crab masala with coconut.',
     difficulty_level: 'medium' as const,
     cooking_time: 50,
     servings: 4,
@@ -486,7 +487,7 @@ export const MOCK_RECIPES = [
     fish_product: MOCK_PRODUCTS[8],
     video_url: 'https://youtube.com/watch?v=example5',
     thumbnail: '/recipes/fish-molee.jpg',
-    description: 'Creamy Kerala style fish curry with coconut milk.',
+    content: 'Creamy Kerala style fish curry with coconut milk.',
     difficulty_level: 'easy' as const,
     cooking_time: 35,
     servings: 4,
@@ -514,7 +515,7 @@ export const MOCK_RECIPES = [
     fish_product: MOCK_PRODUCTS[6],
     video_url: 'https://youtube.com/watch?v=example6',
     thumbnail: '/recipes/squid-roast.jpg',
-    description: 'Spicy dry squid roast with pepper and curry leaves.',
+    content: 'Spicy dry squid roast with pepper and curry leaves.',
     difficulty_level: 'easy' as const,
     cooking_time: 20,
     servings: 3,

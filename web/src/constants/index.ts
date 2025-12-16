@@ -187,7 +187,7 @@ export const CUISINE_TYPES = [
 
 // Navigation Items - Customer
 export const CUSTOMER_NAV_ITEMS = [
-  { href: '/', label: 'Home', label_ta: 'முகப்பு', icon: 'Home' },
+  { href: '/home', label: 'Home', label_ta: 'முகப்பு', icon: 'Home' },
   { href: '/catalog', label: 'Fish Catalog', label_ta: 'மீன் பட்டியல்', icon: 'Fish' },
   { href: '/recipes', label: 'Recipes', label_ta: 'சமையல் குறிப்புகள்', icon: 'Book' },
   { href: '/orders', label: 'My Orders', label_ta: 'என் ஆர்டர்கள்', icon: 'Package' },

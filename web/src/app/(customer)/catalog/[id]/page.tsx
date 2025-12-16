@@ -42,7 +42,7 @@ export default function ProductDetailPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
-      <Header cartItemCount={2} />
+      <Header />
 
       <main className="flex-1">
         {/* Breadcrumb */}
@@ -68,10 +68,10 @@ export default function ProductDetailPage() {
                     {product.category_id === 'prawns'
                       ? '🦐'
                       : product.category_id === 'crabs'
-                      ? '🦀'
-                      : product.category_id === 'squid'
-                      ? '🦑'
-                      : '🐟'}
+                        ? '🦀'
+                        : product.category_id === 'squid'
+                          ? '🦑'
+                          : '🐟'}
                   </span>
                   <Badge className="absolute top-4 left-4 bg-green-500 text-sm px-3 py-1">
                     Fresh Today
@@ -79,9 +79,8 @@ export default function ProductDetailPage() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className={`absolute top-4 right-4 rounded-full bg-white shadow ${
-                      isFavorite ? 'text-red-500' : ''
-                    }`}
+                    className={`absolute top-4 right-4 rounded-full bg-white shadow ${isFavorite ? 'text-red-500' : ''
+                      }`}
                     onClick={() => setIsFavorite(!isFavorite)}
                   >
                     <Heart className={`h-5 w-5 ${isFavorite ? 'fill-current' : ''}`} />
@@ -94,9 +93,8 @@ export default function ProductDetailPage() {
                 {[1, 2, 3, 4].map((i) => (
                   <div
                     key={i}
-                    className={`w-20 h-20 rounded-lg bg-gradient-to-br from-sky-50 to-cyan-50 flex items-center justify-center cursor-pointer border-2 ${
-                      i === 1 ? 'border-primary' : 'border-transparent'
-                    }`}
+                    className={`w-20 h-20 rounded-lg bg-gradient-to-br from-sky-50 to-cyan-50 flex items-center justify-center cursor-pointer border-2 ${i === 1 ? 'border-primary' : 'border-transparent'
+                      }`}
                   >
                     <span className="text-3xl">🐟</span>
                   </div>
@@ -127,11 +125,10 @@ export default function ProductDetailPage() {
                     {[1, 2, 3, 4, 5].map((star) => (
                       <Star
                         key={star}
-                        className={`h-5 w-5 ${
-                          star <= Math.floor(product.rating || 0)
+                        className={`h-5 w-5 ${star <= Math.floor(product.rating || 0)
                             ? 'fill-yellow-400 text-yellow-400'
                             : 'text-slate-300'
-                        }`}
+                          }`}
                       />
                     ))}
                     <span className="font-medium ml-1">{product.rating}</span>
@@ -347,11 +344,10 @@ export default function ProductDetailPage() {
                                   {[...Array(5)].map((_, j) => (
                                     <Star
                                       key={j}
-                                      className={`h-3 w-3 ${
-                                        j < review.rating
+                                      className={`h-3 w-3 ${j < review.rating
                                           ? 'fill-yellow-400 text-yellow-400'
                                           : 'text-slate-300'
-                                      }`}
+                                        }`}
                                     />
                                   ))}
                                 </div>

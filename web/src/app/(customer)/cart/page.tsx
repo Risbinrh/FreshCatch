@@ -30,6 +30,17 @@ export default function CartPage() {
   const [appliedCoupon, setAppliedCoupon] = useState('');
   const [discountAmount, setDiscountAmount] = useState(0);
 
+  // Function to get emoji based on product name or default to fish
+  const getProductEmoji = (item: any) => {
+    if (!item.name && !item.nameTamil) return '🐟';
+    const name = (item.name || '').toLowerCase();
+    const nameTamil = item.nameTamil || '';
+    if (name.includes('prawn') || nameTamil.includes('இறால்')) return '🦐';
+    if (name.includes('crab') || nameTamil.includes('நண்டு')) return '🦀';
+    if (name.includes('squid') || nameTamil.includes('கணவாய்')) return '🦑';
+    return '🐟';
+  };
+
   const applyCoupon = () => {
     if (couponCode.toUpperCase() === 'FIRST50') {
       setAppliedCoupon('FIRST50');
@@ -101,7 +112,7 @@ export default function CartPage() {
                         <div className="flex gap-4">
                           {/* Product Image */}
                           <div className="w-24 h-24 rounded-lg bg-gradient-to-br from-sky-50 to-cyan-50 flex items-center justify-center flex-shrink-0">
-                            <span className="text-4xl">{item.image}</span>
+                            <span className="text-4xl">{getProductEmoji(item)}</span>
                           </div>
 
                           {/* Product Details */}

@@ -61,6 +61,7 @@ const ORDER_STATUS_CONFIG = {
   processing: { label: 'Processing', color: 'bg-yellow-500', icon: Clock },
   out_for_delivery: { label: 'Delivering', color: 'bg-orange-500', icon: Truck },
   delivered: { label: 'Delivered', color: 'bg-green-500', icon: CheckCircle },
+  cancelled: { label: 'Cancelled', color: 'bg-red-500', icon: AlertTriangle },
 };
 
 export default function AdminDashboardPage() {
@@ -165,7 +166,7 @@ export default function AdminDashboardPage() {
                           <div>
                             <p className="font-medium text-sm">Customer</p>
                             <p className="text-xs text-muted-foreground">
-                              {order.address.city}
+                              {order.address?.city}
                             </p>
                           </div>
                         </td>

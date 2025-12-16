@@ -28,6 +28,8 @@ import {
 import Link from 'next/link';
 import { MOCK_PRODUCTS } from '@/lib/mock-data';
 import { FISH_CATEGORIES } from '@/constants';
+import { AddToCartDialog } from '@/components/common/AddToCartDialog';
+import type { FishProduct } from '@/types';
 
 export default function CatalogPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -36,6 +38,8 @@ export default function CatalogPage() {
   const [sortBy, setSortBy] = useState('popular');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showFilters, setShowFilters] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<FishProduct | null>(null);
+  const [showAddToCartDialog, setShowAddToCartDialog] = useState(false);
 
   const filteredProducts = useMemo(() => {
     return MOCK_PRODUCTS.filter((product) => {
@@ -59,6 +63,13 @@ export default function CatalogPage() {
       }
     });
   }, [searchQuery, selectedCategory, priceRange, sortBy]);
+
+  const handleAddToCart = (e: React.MouseEvent, product: FishProduct) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setSelectedProduct(product);
+    setShowAddToCartDialog(true);
+  };
 
   const FilterContent = () => (
     <div className="space-y-6">
@@ -159,7 +170,7 @@ export default function CatalogPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
-      <Header cartItemCount={2} />
+      <Header />
 
       <main className="flex-1">
         {/* Page Header */}
@@ -325,7 +336,11 @@ export default function CatalogPage() {
                                 /kg
                               </span>
                             </p>
-                            <Button size="sm" className="h-8">
+                            <Button
+                              size="sm"
+                              className="h-8"
+                              onClick={(e) => handleAddToCart(e, product)}
+                            >
                               <ShoppingCart className="h-3 w-3" />
                             </Button>
                           </div>
@@ -385,7 +400,7 @@ export default function CatalogPage() {
                                   /kg
                                 </span>
                               </p>
-                              <Button>
+                              <Button onClick={(e) => handleAddToCart(e, product)}>
                                 <ShoppingCart className="h-4 w-4 mr-2" />
                                 Add to Cart
                               </Button>
@@ -403,6 +418,15 @@ export default function CatalogPage() {
       </main>
 
       <Footer />
+
+      {/* Add to Cart Dialog */}
+      {selectedProduct && (
+        <AddToCartDialog
+          product={selectedProduct}
+          open={showAddToCartDialog}
+          onOpenChange={setShowAddToCartDialog}
+        />
+      )}
     </div>
   );
 }

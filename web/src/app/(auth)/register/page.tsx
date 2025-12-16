@@ -61,7 +61,7 @@ export default function RegisterPage() {
       };
       localStorage.setItem('freshcatch_user', JSON.stringify(userData));
       // Set cookie for middleware
-      document.cookie = `freshcatch_user=${JSON.stringify(userData)}; path=/; max-age=${60 * 60 * 24 * 7}`; // 7 days
+      document.cookie = `freshcatch_user=${encodeURIComponent(JSON.stringify(userData))}; path=/; max-age=${60 * 60 * 24 * 7}`; // 7 days
       setTimeout(() => {
         window.location.href = '/home';
       }, 1500);

@@ -14,15 +14,17 @@ export interface User {
 }
 
 export interface Address {
-  id: string;
-  user_id: string;
+  id?: string;
+  user_id?: string;
   full_address: string;
   landmark?: string;
-  latitude: number;
-  longitude: number;
-  zone_id: string;
-  is_default: boolean;
-  address_type: 'home' | 'work' | 'other';
+  city?: string;
+  pincode?: string;
+  latitude?: number;
+  longitude?: number;
+  zone_id?: string;
+  is_default?: boolean;
+  address_type?: 'home' | 'work' | 'other';
 }
 
 // Zone Types
@@ -39,12 +41,13 @@ export interface Zone {
 }
 
 export interface DeliverySlot {
-  id: string;
+  id?: string;
   name: string;
-  name_ta: string;
-  start_time: string;
-  end_time: string;
-  icon: string;
+  name_ta?: string;
+  start_time?: string;
+  end_time?: string;
+  time?: string;
+  icon?: string;
 }
 
 // Product Types
@@ -74,7 +77,7 @@ export interface Category {
   name_tamil: string;
   icon?: string;
   parent_id?: string;
-  is_active: boolean;
+  is_active?: boolean;
 }
 
 export interface CleaningOption {
@@ -116,7 +119,7 @@ export interface Cart {
 export interface Order {
   id: string;
   user_id: string;
-  address_id: string;
+  address_id?: string;
   address?: Address;
   order_status: OrderStatus;
   delivery_slot: DeliverySlot;
@@ -129,19 +132,29 @@ export interface Order {
   payment_method: PaymentMethod;
   payment_status: 'pending' | 'paid' | 'failed' | 'refunded';
   special_instructions?: string;
+  delivery_partner?: {
+    name: string;
+    phone: string;
+    photo?: string;
+  };
+  tracking?: {
+    current_lat: number;
+    current_lng: number;
+    eta: string;
+  };
   created_at: Date;
-  updated_at: Date;
+  updated_at?: Date;
 }
 
 export interface OrderItem {
-  id: string;
-  order_id: string;
-  product_id: string;
+  id?: string;
+  order_id?: string;
+  product_id?: string;
   product?: FishProduct;
   quantity: number;
   unit: 'kg' | 'piece';
   cleaning_type: string;
-  unit_price: number;
+  unit_price?: number;
   total_price: number;
 }
 
@@ -160,7 +173,7 @@ export interface Recipe {
   id: string;
   title_english: string;
   title_tamil: string;
-  fish_product_id: string;
+  fish_product_id?: string;
   fish_product?: FishProduct;
   video_url?: string;
   thumbnail?: string;
@@ -172,7 +185,7 @@ export interface Recipe {
   cuisine_type: string;
   ingredients: RecipeIngredient[];
   steps: RecipeStep[];
-  tags: string[];
+  tags?: string[];
   rating: number;
   reviews_count: number;
   is_active: boolean;

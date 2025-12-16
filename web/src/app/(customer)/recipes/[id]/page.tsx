@@ -47,7 +47,7 @@ export default function RecipeDetailPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header cartItemCount={2} />
+      <Header />
 
       <main className="flex-1">
         {/* Back Button */}
@@ -149,7 +149,7 @@ export default function RecipeDetailPage() {
                 </div>
 
                 {/* Description */}
-                <p className="mt-6 text-muted-foreground">{recipe.description}</p>
+                <p className="mt-6 text-muted-foreground">{recipe.content}</p>
               </div>
 
               {/* Ingredients */}

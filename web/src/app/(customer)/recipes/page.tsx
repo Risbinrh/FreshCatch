@@ -31,7 +31,7 @@ export default function RecipesPage() {
   const [selectedDifficulty, setSelectedDifficulty] = useState<string | null>(null);
   const [selectedCuisine, setSelectedCuisine] = useState<string | null>(null);
 
-  const cuisines = [...new Set(MOCK_RECIPES.map((r) => r.cuisine_type))];
+  const cuisines = Array.from(new Set(MOCK_RECIPES.map((r) => r.cuisine_type)));
 
   const filteredRecipes = useMemo(() => {
     return MOCK_RECIPES.filter((recipe) => {
@@ -47,7 +47,7 @@ export default function RecipesPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header cartItemCount={2} />
+      <Header />
 
       <main className="flex-1">
         {/* Hero Section */}

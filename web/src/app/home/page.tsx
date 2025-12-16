@@ -19,46 +19,10 @@ import Link from 'next/link';
 import { FISH_CATEGORIES, DELIVERY_SLOTS } from '@/constants';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { AddToCartDialog } from '@/components/common/AddToCartDialog';
+import { MOCK_PRODUCTS } from '@/lib/mock-data';
 
-// Mock featured products data
-const FEATURED_PRODUCTS = [
-  {
-    id: '1',
-    name: 'Seer Fish (Vanjaram)',
-    nameTa: 'வஞ்சிரம்',
-    price: 850,
-    image: '🐟',
-    badge: 'Bestseller',
-    rating: 4.8,
-  },
-  {
-    id: '2',
-    name: 'Pomfret (Vaaval)',
-    nameTa: 'வாவல்',
-    price: 650,
-    image: '🐠',
-    badge: 'Fresh Today',
-    rating: 4.7,
-  },
-  {
-    id: '3',
-    name: 'Prawns (Eral)',
-    nameTa: 'இறால்',
-    price: 550,
-    image: '🦐',
-    badge: 'Popular',
-    rating: 4.9,
-  },
-  {
-    id: '4',
-    name: 'King Fish (Neymeen)',
-    nameTa: 'நெய்மீன்',
-    price: 750,
-    image: '🐟',
-    badge: 'Premium',
-    rating: 4.6,
-  },
-];
+// Get first 4 products as featured
+const FEATURED_PRODUCTS = MOCK_PRODUCTS.slice(0, 4);
 
 export default function HomePage() {
   const { language, t } = useLanguage();
@@ -128,7 +92,7 @@ export default function HomePage() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="border-white text-white hover:bg-white/20"
+                    className="border-white !text-white hover:bg-white/30 hover:!text-white bg-white/10 backdrop-blur-sm font-semibold"
                   >
                     {t('View Recipes', 'சமையல் குறிப்புகள்')}
                   </Button>
@@ -238,22 +202,26 @@ export default function HomePage() {
                 >
                   <div className="relative aspect-square bg-gradient-to-br from-sky-50 to-cyan-50 flex items-center justify-center">
                     <span className="text-6xl group-hover:scale-110 transition-transform">
-                      {product.image}
+                      {product.category_id === 'prawns' ? '🦐' : product.category_id === 'crabs' ? '🦀' : product.category_id === 'squid' ? '🦑' : '🐟'}
                     </span>
                     <Badge className="absolute top-2 left-2 bg-primary">
-                      {product.badge}
+                      {product.availability_status === 'in_stock' ? 'In Stock' : 'Limited'}
                     </Badge>
                   </div>
                   <CardContent className="p-4">
-                    <h3 className="font-semibold line-clamp-1">{product.name}</h3>
-                    <p className="text-sm text-muted-foreground">{product.nameTa}</p>
+                    <h3 className="font-semibold line-clamp-1">
+                      {language === 'en' ? product.name_english : product.name_tamil}
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      {language === 'en' ? product.name_tamil : product.name_english}
+                    </p>
                     <div className="flex items-center gap-1 mt-1">
                       <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
                       <span className="text-xs text-muted-foreground">{product.rating}</span>
                     </div>
                     <div className="flex items-center justify-between mt-3">
                       <p className="text-lg font-bold text-primary">
-                        ₹{product.price}
+                        ₹{product.price_per_kg}
                         <span className="text-xs font-normal text-muted-foreground">/kg</span>
                       </p>
                       <Button size="sm" onClick={() => handleAddClick(product)}>

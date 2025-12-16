@@ -40,7 +40,7 @@ export default function OrderDetailPage() {
       label: 'Order Confirmed',
       description: 'Seller has confirmed your order',
       time: '10:35 AM',
-      completed: order.order_status !== 'placed',
+      completed: ['confirmed', 'processing', 'out_for_delivery', 'delivered'].includes(order.order_status),
     },
     {
       status: 'processing',
@@ -67,7 +67,7 @@ export default function OrderDetailPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
-      <Header cartItemCount={2} isLoggedIn userName="Priya" />
+      <Header />
 
       <main className="flex-1">
         <div className="container mx-auto px-4 py-8">
@@ -226,12 +226,12 @@ export default function OrderDetailPage() {
                       <div className="flex gap-4">
                         <div className="w-20 h-20 rounded-lg bg-gradient-to-br from-sky-50 to-cyan-50 flex items-center justify-center">
                           <span className="text-3xl">
-                            {item.product.category_id === 'prawns' ? '🦐' : '🐟'}
+                            {item.product?.category_id === 'prawns' ? '🦐' : '🐟'}
                           </span>
                         </div>
                         <div className="flex-1">
-                          <h4 className="font-medium">{item.product.name_english}</h4>
-                          <p className="text-sm text-muted-foreground">{item.product.name_tamil}</p>
+                          <h4 className="font-medium">{item.product?.name_english}</h4>
+                          <p className="text-sm text-muted-foreground">{item.product?.name_tamil}</p>
                           <div className="flex items-center gap-2 mt-1">
                             <Badge variant="secondary" className="text-xs">
                               {item.cleaning_type}
@@ -262,12 +262,12 @@ export default function OrderDetailPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="font-medium">{order.address.full_address}</p>
+                  <p className="font-medium">{order.address?.full_address}</p>
                   <p className="text-sm text-muted-foreground">
-                    {order.address.landmark}
+                    {order.address?.landmark}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    {order.address.city} - {order.address.pincode}
+                    {order.address?.city} - {order.address?.pincode}
                   </p>
                 </CardContent>
               </Card>

@@ -44,7 +44,7 @@ export default function CheckoutPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
-      <Header cartItemCount={cart.items.length} />
+      <Header />
 
       <main className="flex-1">
         <div className="container mx-auto px-4 py-8">

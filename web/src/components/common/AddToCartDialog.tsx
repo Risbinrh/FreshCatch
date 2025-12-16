@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -14,25 +14,10 @@ import { Badge } from '@/components/ui/badge';
 import { Minus, Plus, ShoppingCart } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { useLanguage } from '@/contexts/LanguageContext';
-
-interface CleaningOption {
-  id: string;
-  name: string;
-  name_tamil: string;
-  price_modifier: number;
-}
-
-interface Product {
-  id: string;
-  name: string;
-  nameTa: string;
-  price: number;
-  image: string;
-  cleaningOptions?: CleaningOption[];
-}
+import type { FishProduct } from '@/types';
 
 interface AddToCartDialogProps {
-  product: Product;
+  product: FishProduct;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
@@ -41,27 +26,41 @@ export function AddToCartDialog({ product, open, onOpenChange }: AddToCartDialog
   const { addToCart } = useCart();
   const { language, t } = useLanguage();
 
-  const defaultCleaningOptions: CleaningOption[] = [
+  // Provide default cleaning options if product doesn't have any
+  const defaultCleaningOptions = [
     { id: 'whole', name: 'Whole', name_tamil: 'முழுமையாக', price_modifier: 0 },
     { id: 'cleaned', name: 'Cleaned', name_tamil: 'சுத்தம்', price_modifier: 20 },
+    { id: 'cut', name: 'Cut Pieces', name_tamil: 'வெட்டப்பட்ட துண்டுகள்', price_modifier: 30 },
   ];
 
-  const cleaningOptions = product.cleaningOptions || defaultCleaningOptions;
+  const cleaningOptions = product.cleaning_options && product.cleaning_options.length > 0
+    ? product.cleaning_options
+    : defaultCleaningOptions;
 
-  const [selectedCleaning, setSelectedCleaning] = useState<CleaningOption>(cleaningOptions[0]);
+  const [selectedCleaning, setSelectedCleaning] = useState(cleaningOptions[0]);
   const [quantity, setQuantity] = useState(0.5);
   const [unit, setUnit] = useState<'kg' | 'piece'>('kg');
 
-  const finalPrice = product.price + selectedCleaning.price_modifier;
+  // Reset cleaning option when product changes
+  useEffect(() => {
+    if (open) {
+      setSelectedCleaning(cleaningOptions[0]);
+      setQuantity(0.5);
+      setUnit('kg');
+    }
+  }, [product.id, open]);
+
+  const basePrice = unit === 'kg' ? (product.price_per_kg || 0) : (product.price_per_piece || 0);
+  const finalPrice = basePrice + (selectedCleaning?.price_modifier || 0);
   const totalPrice = finalPrice * quantity;
 
   const handleAddToCart = () => {
     addToCart({
       productId: product.id,
-      name: product.name,
-      nameTamil: product.nameTa,
-      price: product.price,
-      image: product.image,
+      name: product.name_english,
+      nameTamil: product.name_tamil,
+      price: basePrice,
+      image: product.images?.[0] || '',
       quantity,
       unit,
       cleaningOption: selectedCleaning,
@@ -84,7 +83,7 @@ export function AddToCartDialog({ product, open, onOpenChange }: AddToCartDialog
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>{language === 'en' ? product.name : product.nameTa}</DialogTitle>
+          <DialogTitle>{language === 'en' ? product.name_english : product.name_tamil}</DialogTitle>
           <DialogDescription>
             {t('Select quantity and cleaning option', 'அளவு மற்றும் சுத்தம் செய்யும் விருப்பத்தை தேர்ந்தெடுக்கவும்')}
           </DialogDescription>
@@ -173,9 +172,9 @@ export function AddToCartDialog({ product, open, onOpenChange }: AddToCartDialog
           <div className="bg-slate-50 rounded-lg p-4 space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">{t('Base Price', 'அடிப்படை விலை')}</span>
-              <span>₹{product.price}/{unit === 'kg' ? 'kg' : 'pc'}</span>
+              <span>₹{basePrice}/{unit === 'kg' ? 'kg' : 'pc'}</span>
             </div>
-            {selectedCleaning.price_modifier > 0 && (
+            {selectedCleaning?.price_modifier > 0 && (
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">{t('Cleaning Charge', 'சுத்தம் கட்டணம்')}</span>
                 <span>₹{selectedCleaning.price_modifier}</span>

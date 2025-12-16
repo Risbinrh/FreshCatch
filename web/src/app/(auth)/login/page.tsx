@@ -29,7 +29,7 @@ export default function LoginPage() {
       isLoggedIn: true,
     };
     localStorage.setItem('freshcatch_user', JSON.stringify(userData));
-    document.cookie = `freshcatch_user=${JSON.stringify(userData)}; path=/; max-age=${60 * 60 * 24 * 7}`;
+    document.cookie = `freshcatch_user=${encodeURIComponent(JSON.stringify(userData))}; path=/; max-age=${60 * 60 * 24 * 7}`;
     setTimeout(() => {
       router.push('/home');
     }, 1000);
@@ -69,7 +69,7 @@ export default function LoginPage() {
         isLoggedIn: true,
       };
       localStorage.setItem('freshcatch_user', JSON.stringify(userData));
-      document.cookie = `freshcatch_user=${JSON.stringify(userData)}; path=/; max-age=${60 * 60 * 24 * 7}`;
+      document.cookie = `freshcatch_user=${encodeURIComponent(JSON.stringify(userData))}; path=/; max-age=${60 * 60 * 24 * 7}`;
       setTimeout(() => {
         router.push('/home');
       }, 1500);
@@ -85,7 +85,7 @@ export default function LoginPage() {
       isLoggedIn: true,
     };
     localStorage.setItem('freshcatch_admin', JSON.stringify(adminData));
-    document.cookie = `freshcatch_user=${JSON.stringify(adminData)}; path=/; max-age=${60 * 60 * 24 * 7}`;
+    document.cookie = `freshcatch_user=${encodeURIComponent(JSON.stringify(adminData))}; path=/; max-age=${60 * 60 * 24 * 7}`;
     setTimeout(() => {
       router.push('/admin/dashboard');
     }, 1000);

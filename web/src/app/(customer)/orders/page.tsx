@@ -41,7 +41,7 @@ export default function OrdersPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
-      <Header cartItemCount={2} isLoggedIn userName="Priya" />
+      <Header />
 
       <main className="flex-1">
         <div className="container mx-auto px-4 py-8">
@@ -107,7 +107,7 @@ export default function OrdersPage() {
                                   className="h-16 w-16 rounded-lg bg-gradient-to-br from-sky-50 to-cyan-50 flex items-center justify-center border-2 border-white"
                                 >
                                   <span className="text-2xl">
-                                    {item.product.category_id === 'prawns' ? '🦐' : '🐟'}
+                                    {item.product?.category_id === 'prawns' ? '🦐' : '🐟'}
                                   </span>
                                 </div>
                               ))}
@@ -123,7 +123,7 @@ export default function OrdersPage() {
                             {/* Order Details */}
                             <div className="flex-1">
                               <p className="font-medium">
-                                {order.items.map((item) => item.product.name_english).join(', ')}
+                                {order.items.map((item) => item.product?.name_english).filter(Boolean).join(', ')}
                               </p>
                               <p className="text-sm text-muted-foreground">
                                 {order.items.length} items • {order.items.reduce((sum, item) => sum + item.quantity, 0)} kg
@@ -137,7 +137,7 @@ export default function OrdersPage() {
                                 </div>
                                 <div className="flex items-center gap-1 text-muted-foreground">
                                   <MapPin className="h-4 w-4" />
-                                  <span>{order.address.city}</span>
+                                  <span>{order.address?.city}</span>
                                 </div>
                               </div>
                             </div>

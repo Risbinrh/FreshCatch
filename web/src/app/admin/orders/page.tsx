@@ -44,7 +44,7 @@ export default function AdminOrdersPage() {
   const filteredOrders = MOCK_ORDERS.filter((order) => {
     const matchesSearch =
       order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.address.city.toLowerCase().includes(searchQuery.toLowerCase());
+      (order.address?.city?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false);
     const matchesTab =
       activeTab === 'all' ||
       (activeTab === 'active' &&
@@ -196,7 +196,7 @@ export default function AdminOrdersPage() {
                             <p className="text-sm font-medium">Customer</p>
                             <p className="text-xs text-muted-foreground flex items-center gap-1">
                               <MapPin className="h-3 w-3" />
-                              {order.address.city}
+                              {order.address?.city}
                             </p>
                           </div>
                         </div>
