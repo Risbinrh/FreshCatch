@@ -16,13 +16,15 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { FISH_CATEGORIES, DELIVERY_SLOTS } from '@/constants';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { AddToCartDialog } from '@/components/common/AddToCartDialog';
-import { MOCK_PRODUCTS } from '@/lib/mock-data';
+import { MOCK_PRODUCTS, MOCK_RECIPES } from '@/lib/mock-data';
 
 // Get first 4 products as featured
 const FEATURED_PRODUCTS = MOCK_PRODUCTS.slice(0, 4);
+const FEATURED_RECIPES = MOCK_RECIPES.slice(0, 2);
 
 export default function HomePage() {
   const { language, t } = useLanguage();
@@ -200,10 +202,22 @@ export default function HomePage() {
                   key={product.id}
                   className="group overflow-hidden hover:shadow-lg transition-shadow"
                 >
-                  <div className="relative aspect-square bg-gradient-to-br from-sky-50 to-cyan-50 flex items-center justify-center">
-                    <span className="text-6xl group-hover:scale-110 transition-transform">
-                      {product.category_id === 'prawns' ? '🦐' : product.category_id === 'crabs' ? '🦀' : product.category_id === 'squid' ? '🦑' : '🐟'}
-                    </span>
+                  <div className="relative aspect-square bg-gradient-to-br from-sky-50 to-cyan-50 overflow-hidden">
+                    {product.images?.[0] ? (
+                      <Image
+                        src={product.images[0]}
+                        alt={product.name_english}
+                        width={400}
+                        height={400}
+                        className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center h-full">
+                        <span className="text-6xl">
+                          {product.category_id === 'prawns' ? '🦐' : product.category_id === 'crabs' ? '🦀' : product.category_id === 'squid' ? '🦑' : '🐟'}
+                        </span>
+                      </div>
+                    )}
                     <Badge className="absolute top-2 left-2 bg-primary">
                       {product.availability_status === 'in_stock' ? 'In Stock' : 'Limited'}
                     </Badge>
@@ -290,16 +304,27 @@ export default function HomePage() {
                 </Link>
               </div>
               <div className="flex-1 grid grid-cols-2 gap-4">
-                <Card className="overflow-hidden">
-                  <div className="aspect-square bg-gradient-to-br from-orange-100 to-red-100 flex items-center justify-center text-5xl">
-                    🍛
-                  </div>
-                </Card>
-                <Card className="overflow-hidden">
-                  <div className="aspect-square bg-gradient-to-br from-yellow-100 to-orange-100 flex items-center justify-center text-5xl">
-                    🍳
-                  </div>
-                </Card>
+                {FEATURED_RECIPES.map((recipe) => (
+                  <Link key={recipe.id} href={`/recipes/${recipe.id}`}>
+                    <Card className="overflow-hidden hover:shadow-lg transition-shadow group">
+                      <div className="aspect-square bg-gradient-to-br from-orange-100 to-red-100 overflow-hidden">
+                        {recipe.thumbnail ? (
+                          <Image
+                            src={recipe.thumbnail}
+                            alt={recipe.title_english}
+                            width={400}
+                            height={400}
+                            className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
+                          />
+                        ) : (
+                          <div className="flex items-center justify-center h-full text-5xl">
+                            🍳
+                          </div>
+                        )}
+                      </div>
+                    </Card>
+                  </Link>
+                ))}
               </div>
             </div>
           </div>

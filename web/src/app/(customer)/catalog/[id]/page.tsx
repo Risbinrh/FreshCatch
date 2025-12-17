@@ -261,7 +261,7 @@ export default function ProductDetailPage() {
                     size="lg"
                     className="flex-1 h-14 text-lg"
                     onClick={handleAddToCart}
-                    disabled={isAdding || product.availability_status === 'out_of_stock'}
+                    disabled={isAdding || !['in_stock', 'limited'].includes(product.availability_status)}
                   >
                     {isAdding ? (
                       <>
