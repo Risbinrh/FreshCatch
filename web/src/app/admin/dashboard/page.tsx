@@ -154,7 +154,7 @@ export default function AdminDashboardPage() {
                                   key={i}
                                   className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center border-2 border-white overflow-hidden"
                                 >
-                                  {item.product.images?.[0] ? (
+                                  {item.product?.images?.[0] ? (
                                     <Image
                                       src={item.product.images[0]}
                                       alt={item.product.name_english}
