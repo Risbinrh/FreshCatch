@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { Header, Footer } from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -21,9 +22,12 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { MOCK_PRODUCTS, MOCK_RECIPES } from '@/lib/mock-data';
+import { useCart } from '@/contexts/CartContext';
 
 export default function ProductDetailPage() {
   const params = useParams();
+  const router = useRouter();
+  const { addToCart } = useCart();
   const product = MOCK_PRODUCTS.find((p) => p.id === params.id) || MOCK_PRODUCTS[0];
   const relatedRecipes = MOCK_RECIPES.filter((r) => r.fish_product?.id === product.id).slice(0, 2);
 
@@ -31,10 +35,40 @@ export default function ProductDetailPage() {
   const [unit, setUnit] = useState<'kg' | 'piece'>('kg');
   const [selectedCleaning, setSelectedCleaning] = useState(product.cleaning_options[0]?.id || 'whole');
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
+  const [showViewCart, setShowViewCart] = useState(false);
 
   const basePrice = unit === 'kg' ? product.price_per_kg : (product.price_per_piece || product.price_per_kg);
   const cleaningOption = product.cleaning_options.find((c) => c.id === selectedCleaning);
   const totalPrice = (basePrice + (cleaningOption?.price_modifier || 0)) * quantity;
+
+  const handleAddToCart = () => {
+    if (!cleaningOption) return;
+
+    setIsAdding(true);
+
+    addToCart({
+      productId: product.id,
+      name: product.name_english,
+      nameTamil: product.name_tamil,
+      price: basePrice,
+      image: product.images?.[0] || '',
+      quantity,
+      unit,
+      cleaningOption: {
+        id: cleaningOption.id,
+        name: cleaningOption.name,
+        name_tamil: cleaningOption.name_tamil,
+        price_modifier: cleaningOption.price_modifier,
+      },
+    });
+
+    // Show success state and view cart button
+    setTimeout(() => {
+      setIsAdding(false);
+      setShowViewCart(true);
+    }, 1000);
+  };
 
   const relatedProducts = MOCK_PRODUCTS.filter(
     (p) => p.category_id === product.category_id && p.id !== product.id
@@ -221,14 +255,38 @@ export default function ProductDetailPage() {
               </div>
 
               {/* Add to Cart */}
-              <div className="flex gap-3">
-                <Button size="lg" className="flex-1 h-14 text-lg">
-                  <ShoppingCart className="h-5 w-5 mr-2" />
-                  Add to Cart - ₹{totalPrice}
-                </Button>
-                <Button size="lg" variant="outline" className="h-14">
-                  <Heart className="h-5 w-5" />
-                </Button>
+              <div className="space-y-3">
+                <div className="flex gap-3">
+                  <Button
+                    size="lg"
+                    className="flex-1 h-14 text-lg"
+                    onClick={handleAddToCart}
+                    disabled={isAdding || product.availability_status === 'out_of_stock'}
+                  >
+                    {isAdding ? (
+                      <>
+                        <Check className="h-5 w-5 mr-2" />
+                        Added to Cart!
+                      </>
+                    ) : (
+                      <>
+                        <ShoppingCart className="h-5 w-5 mr-2" />
+                        Add to Cart - ₹{totalPrice}
+                      </>
+                    )}
+                  </Button>
+                  <Button size="lg" variant="outline" className="h-14">
+                    <Heart className="h-5 w-5" />
+                  </Button>
+                </div>
+                {showViewCart && (
+                  <Link href="/cart" className="block">
+                    <Button variant="outline" size="lg" className="w-full h-12">
+                      View Cart
+                      <ChevronRight className="h-4 w-4 ml-2" />
+                    </Button>
+                  </Link>
+                )}
               </div>
 
               {/* Features */}
@@ -372,10 +430,21 @@ export default function ProductDetailPage() {
               <div className="grid md:grid-cols-2 gap-6">
                 {relatedRecipes.map((recipe) => (
                   <Link key={recipe.id} href={`/recipes/${recipe.id}`}>
-                    <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+                    <Card className="overflow-hidden hover:shadow-lg transition-shadow group">
                       <div className="flex">
-                        <div className="w-40 h-40 bg-gradient-to-br from-orange-100 to-red-100 flex items-center justify-center flex-shrink-0">
-                          <span className="text-5xl">🍛</span>
+                        <div className="relative w-40 h-40 bg-gradient-to-br from-orange-100 to-red-100 flex-shrink-0 overflow-hidden">
+                          {recipe.thumbnail ? (
+                            <Image
+                              src={recipe.thumbnail}
+                              alt={recipe.title_english}
+                              fill
+                              className="object-cover group-hover:scale-105 transition-transform duration-300"
+                            />
+                          ) : (
+                            <div className="flex items-center justify-center h-full">
+                              <span className="text-5xl">🍛</span>
+                            </div>
+                          )}
                         </div>
                         <CardContent className="p-4">
                           <h3 className="font-semibold">{recipe.title_english}</h3>

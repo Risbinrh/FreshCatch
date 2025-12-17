@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import Image from 'next/image';
 import { Header, Footer } from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -16,9 +17,11 @@ import {
   Filter,
   BookOpen,
   ChefHat,
+  X,
 } from 'lucide-react';
 import Link from 'next/link';
 import { MOCK_RECIPES } from '@/lib/mock-data';
+import type { Recipe } from '@/types';
 
 const DIFFICULTY_CONFIG = {
   easy: { label: 'Easy', color: 'bg-green-500' },
@@ -30,6 +33,7 @@ export default function RecipesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDifficulty, setSelectedDifficulty] = useState<string | null>(null);
   const [selectedCuisine, setSelectedCuisine] = useState<string | null>(null);
+  const [playingVideoId, setPlayingVideoId] = useState<string | null>(null);
 
   const cuisines = Array.from(new Set(MOCK_RECIPES.map((r) => r.cuisine_type)));
 
@@ -150,83 +154,119 @@ export default function RecipesPage() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredRecipes.map((recipe) => {
               const difficulty = DIFFICULTY_CONFIG[recipe.difficulty_level];
+              const isPlaying = playingVideoId === recipe.id;
 
               return (
-                <Link key={recipe.id} href={`/recipes/${recipe.id}`}>
+                <div key={recipe.id}>
                   <Card className="group overflow-hidden hover:shadow-lg transition-all h-full">
                     {/* Recipe Image/Video */}
-                    <div className="relative aspect-video bg-gradient-to-br from-orange-100 to-red-100">
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-6xl">🍛</span>
-                      </div>
-
-                      {/* Play Button Overlay */}
-                      {recipe.video_url && (
-                        <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                          <div className="h-16 w-16 rounded-full bg-white/90 flex items-center justify-center">
-                            <Play className="h-8 w-8 text-orange-500 ml-1" />
-                          </div>
+                    <div className="relative aspect-video bg-gradient-to-br from-orange-100 to-red-100 overflow-hidden">
+                      {isPlaying && recipe.video_url ? (
+                        /* Video Player */
+                        <div className="relative w-full h-full">
+                          <iframe
+                            src={recipe.video_url}
+                            title={recipe.title_english}
+                            className="w-full h-full"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                          />
+                          {/* Close button */}
+                          <button
+                            className="absolute top-3 right-3 h-8 w-8 rounded-full bg-black/60 hover:bg-black/80 text-white flex items-center justify-center z-30 transition-colors"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setPlayingVideoId(null);
+                            }}
+                          >
+                            <X className="h-5 w-5" />
+                          </button>
                         </div>
-                      )}
+                      ) : (
+                        /* Thumbnail with Play Button */
+                        <>
+                          <Link href={`/recipes/${recipe.id}`}>
+                            {/* Thumbnail Image */}
+                            {recipe.thumbnail && (
+                              <Image
+                                src={recipe.thumbnail}
+                                alt={recipe.title_english}
+                                fill
+                                className="object-cover group-hover:scale-105 transition-transform duration-300"
+                              />
+                            )}
+                          </Link>
 
-                      {/* Badges */}
-                      <Badge className={`absolute top-3 left-3 ${difficulty.color} text-white`}>
-                        {difficulty.label}
-                      </Badge>
+                          {/* Play Button Overlay */}
+                          {recipe.video_url && (
+                            <div
+                              className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-all flex items-center justify-center cursor-pointer z-10"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setPlayingVideoId(recipe.id);
+                              }}
+                            >
+                              <div className="h-16 w-16 rounded-full bg-white hover:bg-red-600 hover:scale-110 transition-all duration-300 flex items-center justify-center shadow-xl group/play">
+                                <Play className="h-8 w-8 text-red-600 group-hover/play:text-white ml-1 transition-colors" />
+                              </div>
+                            </div>
+                          )}
 
-                      <div className="absolute top-3 right-3 bg-black/60 text-white text-xs px-2 py-1 rounded flex items-center gap-1">
-                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                        {recipe.rating}
-                      </div>
+                          {/* Badges */}
+                          <Badge className={`absolute top-3 left-3 ${difficulty.color} text-white z-20`}>
+                            {difficulty.label}
+                          </Badge>
 
-                      {recipe.video_url && (
-                        <Badge className="absolute bottom-3 left-3 bg-red-500 text-white">
-                          <Play className="h-3 w-3 mr-1" />
-                          Video
-                        </Badge>
+                          <div className="absolute top-3 right-3 bg-black/60 text-white text-xs px-2 py-1 rounded flex items-center gap-1 z-20">
+                            <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                            {recipe.rating}
+                          </div>
+                        </>
                       )}
                     </div>
 
-                    <CardContent className="p-4">
-                      <h3 className="font-semibold text-lg line-clamp-1 group-hover:text-primary transition-colors">
-                        {recipe.title_english}
-                      </h3>
-                      <p className="text-sm text-muted-foreground mb-3">
-                        {recipe.title_tamil}
-                      </p>
+                    <Link href={`/recipes/${recipe.id}`}>
+                      <CardContent className="p-4">
+                        <h3 className="font-semibold text-lg line-clamp-1 group-hover:text-primary transition-colors">
+                          {recipe.title_english}
+                        </h3>
+                        <p className="text-sm text-muted-foreground mb-3">
+                          {recipe.title_tamil}
+                        </p>
 
-                      {/* Meta Info */}
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
-                        <div className="flex items-center gap-1">
-                          <Clock className="h-4 w-4" />
-                          {recipe.cooking_time} mins
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Users className="h-4 w-4" />
-                          {recipe.servings} servings
-                        </div>
-                      </div>
-
-                      {/* Fish Info */}
-                      {recipe.fish_product && (
-                        <div className="flex items-center justify-between pt-3 border-t">
-                          <div className="flex items-center gap-2">
-                            <span className="text-xl">🐟</span>
-                            <div>
-                              <p className="text-xs text-muted-foreground">Made with</p>
-                              <p className="text-sm font-medium">
-                                {recipe.fish_product.name_english}
-                              </p>
-                            </div>
+                        {/* Meta Info */}
+                        <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
+                          <div className="flex items-center gap-1">
+                            <Clock className="h-4 w-4" />
+                            {recipe.cooking_time} mins
                           </div>
-                          <Badge variant="secondary">
-                            ₹{recipe.fish_product.price_per_kg}/kg
-                          </Badge>
+                          <div className="flex items-center gap-1">
+                            <Users className="h-4 w-4" />
+                            {recipe.servings} servings
+                          </div>
                         </div>
-                      )}
-                    </CardContent>
+
+                        {/* Fish Info */}
+                        {recipe.fish_product && (
+                          <div className="flex items-center justify-between pt-3 border-t">
+                            <div className="flex items-center gap-2">
+                              <span className="text-xl">🐟</span>
+                              <div>
+                                <p className="text-xs text-muted-foreground">Made with</p>
+                                <p className="text-sm font-medium">
+                                  {recipe.fish_product.name_english}
+                                </p>
+                              </div>
+                            </div>
+                            <Badge variant="secondary">
+                              ₹{recipe.fish_product.price_per_kg}/kg
+                            </Badge>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Link>
                   </Card>
-                </Link>
+                </div>
               );
             })}
           </div>

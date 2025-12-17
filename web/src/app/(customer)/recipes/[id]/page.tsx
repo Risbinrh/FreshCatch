@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useParams } from 'next/navigation';
+import Image from 'next/image';
 import { Header, Footer } from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,6 +20,7 @@ import {
   ChevronLeft,
   Check,
   ChefHat,
+  X,
 } from 'lucide-react';
 import Link from 'next/link';
 import { MOCK_RECIPES, MOCK_PRODUCTS } from '@/lib/mock-data';
@@ -34,6 +36,7 @@ export default function RecipeDetailPage() {
   const recipe = MOCK_RECIPES.find((r) => r.id === params.id) || MOCK_RECIPES[0];
   const [isFavorite, setIsFavorite] = useState(false);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const difficulty = DIFFICULTY_CONFIG[recipe.difficulty_level];
 
@@ -69,16 +72,50 @@ export default function RecipeDetailPage() {
             <div className="lg:col-span-2 space-y-8">
               {/* Video Section */}
               <Card className="overflow-hidden">
-                <div className="relative aspect-video bg-gradient-to-br from-orange-100 to-red-100">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-8xl">🍛</span>
-                  </div>
-                  {recipe.video_url && (
-                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                      <Button size="lg" className="rounded-full h-20 w-20 bg-white text-orange-500 hover:bg-white/90">
-                        <Play className="h-10 w-10 ml-1" />
-                      </Button>
+                <div className="relative aspect-video bg-gradient-to-br from-orange-100 to-red-100 overflow-hidden">
+                  {isPlaying && recipe.video_url ? (
+                    /* Video Player */
+                    <div className="absolute inset-0 w-full h-full">
+                      <iframe
+                        src={recipe.video_url}
+                        title={recipe.title_english}
+                        className="w-full h-full"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      />
+                      {/* Close button */}
+                      <button
+                        className="absolute top-3 right-3 h-8 w-8 rounded-full bg-black/60 hover:bg-black/80 text-white flex items-center justify-center z-30 transition-colors"
+                        onClick={() => setIsPlaying(false)}
+                      >
+                        <X className="h-5 w-5" />
+                      </button>
                     </div>
+                  ) : (
+                    /* Thumbnail with Play Button */
+                    <>
+                      {/* Thumbnail Image */}
+                      {recipe.thumbnail && (
+                        <Image
+                          src={recipe.thumbnail}
+                          alt={recipe.title_english}
+                          fill
+                          className="object-cover group-hover/video:scale-105 transition-transform duration-300"
+                        />
+                      )}
+
+                      {/* Play Button Overlay */}
+                      {recipe.video_url && (
+                        <div
+                          className="absolute inset-0 bg-black/40 hover:bg-black/50 transition-all flex items-center justify-center cursor-pointer z-10"
+                          onClick={() => setIsPlaying(true)}
+                        >
+                          <div className="h-20 w-20 rounded-full bg-white hover:bg-red-600 hover:scale-110 transition-all duration-300 flex items-center justify-center shadow-xl group/play">
+                            <Play className="h-10 w-10 text-red-600 group-hover/play:text-white ml-1 transition-colors" />
+                          </div>
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
               </Card>
