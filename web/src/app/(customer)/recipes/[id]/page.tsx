@@ -23,7 +23,7 @@ import {
   X,
 } from 'lucide-react';
 import Link from 'next/link';
-import { MOCK_RECIPES, MOCK_PRODUCTS } from '@/lib/mock-data';
+import { MOCK_RECIPES } from '@/lib/mock-data';
 
 const DIFFICULTY_CONFIG = {
   easy: { label: 'Easy', labelTa: 'எளிது', color: 'bg-green-500' },
@@ -267,11 +267,6 @@ export default function RecipeDetailPage() {
                           >
                             {step.instruction}
                           </p>
-                          {step.duration && (
-                            <p className="text-sm text-muted-foreground mt-1">
-                              ⏱️ {step.duration} minutes
-                            </p>
-                          )}
                         </div>
                       </li>
                     ))}

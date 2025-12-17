@@ -12,7 +12,7 @@ export const MOCK_PRODUCTS = [
     description_tamil: 'உயர்தர வஞ்சிரம் மீன், அதன் உறுதியான அமைப்பு மற்றும் சுவைக்கு பெயர் பெற்றது.',
     price_per_kg: 850,
     price_per_piece: 450,
-    images: ['https://images.unsplash.com/photo-1559616956-6fa18b0a9382?w=800&q=80&fit=crop'],
+    images: ['/images/fish/sea-fish/seer-1.jpg', '/images/fish/sea-fish/seer-2.jpg'],
     cleaning_options: [
       { id: 'whole', name: 'Whole', name_tamil: 'முழுமையாக', price_modifier: 0 },
       { id: 'cleaned', name: 'Cleaned', name_tamil: 'சுத்தம்', price_modifier: 0 },
@@ -36,7 +36,7 @@ export const MOCK_PRODUCTS = [
     description: 'Fresh white pomfret with delicate flavor. Excellent for shallow frying or steaming. A family favorite.',
     price_per_kg: 750,
     price_per_piece: 380,
-    images: ['https://images.unsplash.com/photo-1534043464124-3be32fe000c9?w=800&q=80&fit=crop'],
+    images: ['/images/fish/sea-fish/pomfret-1.jpg'],
     cleaning_options: [
       { id: 'whole', name: 'Whole', name_tamil: 'முழுமையாக', price_modifier: 0 },
       { id: 'cleaned', name: 'Cleaned', name_tamil: 'சுத்தம்', price_modifier: 0 },
@@ -58,7 +58,7 @@ export const MOCK_PRODUCTS = [
     category: { id: 'prawns', name_english: 'Prawns & Shrimp', name_tamil: 'இறால்' },
     description: 'Large, succulent tiger prawns. Perfect for biriyani, curry, or grilled preparations.',
     price_per_kg: 650,
-    images: ['https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?w=800&q=80'],
+    images: ['/images/fish/prawns/prawns-1.jpg'],
     cleaning_options: [
       { id: 'whole', name: 'With Shell', name_tamil: 'ஓடுடன்', price_modifier: 0 },
       { id: 'cleaned', name: 'Deveined', name_tamil: 'சுத்தம்', price_modifier: 50 },
@@ -82,7 +82,7 @@ export const MOCK_PRODUCTS = [
     description: 'Rich and flavorful King fish steaks. Great for curry or shallow fry. A premium choice.',
     price_per_kg: 720,
     price_per_piece: 350,
-    images: ['https://images.unsplash.com/photo-1599084993091-1cb5c0721cc6?w=800&q=80'],
+    images: ['/images/fish/sea-fish/kingfish-1.jpg'],
     cleaning_options: [
       { id: 'steaks', name: 'Steaks', name_tamil: 'துண்டுகள்', price_modifier: 0 },
       { id: 'fillet', name: 'Fillet', name_tamil: 'ஃபில்லட்', price_modifier: 50 },
@@ -104,7 +104,7 @@ export const MOCK_PRODUCTS = [
     category: { id: 'crabs', name_english: 'Crabs', name_tamil: 'நண்டு' },
     description: 'Fresh blue swimming crabs, perfect for nandu kulambu or pepper crab.',
     price_per_kg: 480,
-    images: ['https://images.unsplash.com/photo-1580217593608-61931cefc821?w=800&q=80'],
+    images: ['/images/fish/crabs/crab-1.jpg'],
     cleaning_options: [
       { id: 'whole', name: 'Whole Live', name_tamil: 'உயிருடன்', price_modifier: 0 },
       { id: 'cleaned', name: 'Cleaned', name_tamil: 'சுத்தம்', price_modifier: 30 },
@@ -126,7 +126,7 @@ export const MOCK_PRODUCTS = [
     category: { id: 'river', name_english: 'River Fish', name_tamil: 'ஆற்று மீன்' },
     description: 'Fresh water Rohu fish, ideal for Bengali style preparations and fish curry.',
     price_per_kg: 280,
-    images: ['https://images.unsplash.com/photo-1535591273668-578e31182c4f?w=800&q=80'],
+    images: ['/images/fish/river-fish/rohu-1.jpg'],
     cleaning_options: [
       { id: 'whole', name: 'Whole', name_tamil: 'முழுமையாக', price_modifier: 0 },
       { id: 'cleaned', name: 'Cleaned', name_tamil: 'சுத்தம்', price_modifier: 0 },
@@ -149,7 +149,7 @@ export const MOCK_PRODUCTS = [
     category: { id: 'squid', name_english: 'Squid & Cuttlefish', name_tamil: 'கணவாய்' },
     description: 'Fresh squid rings, perfect for frying or making spicy squid roast.',
     price_per_kg: 380,
-    images: ['https://images.unsplash.com/photo-1559616956-6fa18b0a9382?w=800&q=80'],
+    images: ['/images/fish/squid/squid-1.jpg'],
     cleaning_options: [
       { id: 'whole', name: 'Whole', name_tamil: 'முழுமையாக', price_modifier: 0 },
       { id: 'rings', name: 'Rings', name_tamil: 'வளையங்கள்', price_modifier: 40 },
@@ -172,7 +172,7 @@ export const MOCK_PRODUCTS = [
     category: { id: 'sea', name_english: 'Sea Fish', name_tamil: 'கடல் மீன்' },
     description: 'Fresh mackerel, great for everyday cooking. Affordable and nutritious.',
     price_per_kg: 220,
-    images: ['https://images.unsplash.com/photo-1535591273668-578e31182c4f?w=800&q=80'],
+    images: ['/images/fish/sea-fish/mackerel-1.jpg'],
     cleaning_options: [
       { id: 'whole', name: 'Whole', name_tamil: 'முழுமையாக', price_modifier: 0 },
       { id: 'cleaned', name: 'Cleaned', name_tamil: 'சுத்தம்', price_modifier: 0 },
@@ -194,7 +194,7 @@ export const MOCK_PRODUCTS = [
     category: { id: 'sea', name_english: 'Sea Fish', name_tamil: 'கடல் மீன்' },
     description: 'Premium red snapper, excellent for special occasions. Mild and sweet flavor.',
     price_per_kg: 580,
-    images: ['https://images.unsplash.com/photo-1544943910-4c1dc44aab44?w=800&q=80'],
+    images: ['/images/fish/sea-fish/snapper-1.jpg'],
     cleaning_options: [
       { id: 'whole', name: 'Whole', name_tamil: 'முழுமையாக', price_modifier: 0 },
       { id: 'cleaned', name: 'Cleaned', name_tamil: 'சுத்தம்', price_modifier: 0 },
@@ -217,7 +217,7 @@ export const MOCK_PRODUCTS = [
     category: { id: 'sea', name_english: 'Sea Fish', name_tamil: 'கடல் மீன்' },
     description: 'Small, flavorful anchovies. Perfect for crispy fry or nethili kulambu.',
     price_per_kg: 180,
-    images: ['https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80'],
+    images: ['/images/fish/sea-fish/anchovy-1.jpg'],
     cleaning_options: [
       { id: 'whole', name: 'Whole', name_tamil: 'முழுமையாக', price_modifier: 0 },
       { id: 'cleaned', name: 'Cleaned', name_tamil: 'சுத்தம்', price_modifier: 20 },
@@ -239,7 +239,7 @@ export const MOCK_PRODUCTS = [
     category: { id: 'special', name_english: 'Special/Seasonal', name_tamil: 'சிறப்பு' },
     description: 'Premium fresh lobster for special occasions. Rich, buttery flavor.',
     price_per_kg: 1800,
-    images: ['https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=800&q=80'],
+    images: ['/images/fish/sea-fish/lobster-1.jpg'],
     cleaning_options: [
       { id: 'whole', name: 'Whole Live', name_tamil: 'உயிருடன்', price_modifier: 0 },
     ],
@@ -260,7 +260,7 @@ export const MOCK_PRODUCTS = [
     category: { id: 'sea', name_english: 'Sea Fish', name_tamil: 'கடல் மீன்' },
     description: 'Fresh sardines, highly nutritious and affordable. Great for everyday meals.',
     price_per_kg: 150,
-    images: ['https://images.unsplash.com/photo-1535591273668-578e31182c4f?w=800&q=80'],
+    images: ['/images/fish/sea-fish/sardine-1.jpg'],
     cleaning_options: [
       { id: 'whole', name: 'Whole', name_tamil: 'முழுமையாக', price_modifier: 0 },
       { id: 'cleaned', name: 'Cleaned', name_tamil: 'சுத்தம்', price_modifier: 0 },
@@ -325,7 +325,7 @@ export const MOCK_ORDERS: Order[] = [
     delivery_partner: {
       name: 'Rajan K',
       phone: '+91 98765 43210',
-      photo: '/delivery/rajan.jpg',
+      photo: '/images/delivery/rajan.jpg',
     },
     tracking: {
       current_lat: 13.0418,
@@ -545,7 +545,7 @@ export const MOCK_USER = {
   referral_code: 'PRIYA50',
   referred_by: null,
   preferred_language: 'en' as const,
-  profile_picture: '/users/priya.jpg',
+  profile_picture: '/images/users/priya.jpg',
   wallet_balance: 150,
   total_orders: 23,
   addresses: [

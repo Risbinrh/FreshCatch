@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -48,9 +48,7 @@ export default function AdminOrdersPage() {
     const matchesTab =
       activeTab === 'all' ||
       (activeTab === 'active' &&
-        ['placed', 'confirmed', 'processing', 'out_for_delivery'].includes(
-          order.order_status
-        )) ||
+        ['processing', 'out_for_delivery'].includes(order.order_status)) ||
       (activeTab === 'completed' && order.order_status === 'delivered') ||
       order.order_status === activeTab;
     return matchesSearch && matchesTab;
@@ -58,7 +56,7 @@ export default function AdminOrdersPage() {
 
   const orderCounts = {
     all: MOCK_ORDERS.length,
-    placed: MOCK_ORDERS.filter((o) => o.order_status === 'placed').length,
+    new: 0, // No 'placed' status in type, showing as new orders
     processing: MOCK_ORDERS.filter((o) => o.order_status === 'processing').length,
     out_for_delivery: MOCK_ORDERS.filter((o) => o.order_status === 'out_for_delivery')
       .length,
@@ -84,7 +82,7 @@ export default function AdminOrdersPage() {
       {/* Order Stats */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         {[
-          { label: 'New', count: orderCounts.placed, color: 'bg-blue-100 text-blue-700' },
+          { label: 'New', count: orderCounts.new, color: 'bg-blue-100 text-blue-700' },
           {
             label: 'Processing',
             count: orderCounts.processing,
@@ -146,7 +144,6 @@ export default function AdminOrdersPage() {
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList>
               <TabsTrigger value="all">All ({orderCounts.all})</TabsTrigger>
-              <TabsTrigger value="placed">New ({orderCounts.placed})</TabsTrigger>
               <TabsTrigger value="processing">
                 Processing ({orderCounts.processing})
               </TabsTrigger>

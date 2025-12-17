@@ -7,7 +7,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import {
-  Package,
   Truck,
   CheckCircle,
   Clock,
@@ -102,13 +101,12 @@ export default function OrderDetailPage() {
                       </p>
                     </div>
                     <Badge
-                      className={`text-white ${
-                        order.order_status === 'delivered'
+                      className={`text-white ${order.order_status === 'delivered'
                           ? 'bg-green-500'
                           : order.order_status === 'out_for_delivery'
-                          ? 'bg-orange-500'
-                          : 'bg-blue-500'
-                      }`}
+                            ? 'bg-orange-500'
+                            : 'bg-blue-500'
+                        }`}
                     >
                       {order.order_status === 'out_for_delivery'
                         ? 'Out for Delivery'
@@ -179,11 +177,10 @@ export default function OrderDetailPage() {
                       <div key={step.status} className="flex gap-4">
                         <div className="flex flex-col items-center">
                           <div
-                            className={`h-8 w-8 rounded-full flex items-center justify-center ${
-                              step.completed
+                            className={`h-8 w-8 rounded-full flex items-center justify-center ${step.completed
                                 ? 'bg-green-500 text-white'
                                 : 'bg-slate-200 text-slate-400'
-                            }`}
+                              }`}
                           >
                             {step.completed ? (
                               <CheckCircle className="h-5 w-5" />
@@ -193,9 +190,8 @@ export default function OrderDetailPage() {
                           </div>
                           {index < ORDER_TIMELINE.length - 1 && (
                             <div
-                              className={`w-0.5 h-12 ${
-                                step.completed ? 'bg-green-500' : 'bg-slate-200'
-                              }`}
+                              className={`w-0.5 h-12 ${step.completed ? 'bg-green-500' : 'bg-slate-200'
+                                }`}
                             />
                           )}
                         </div>

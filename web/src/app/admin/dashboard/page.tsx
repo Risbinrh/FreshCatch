@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -18,7 +19,7 @@ import {
   Eye,
 } from 'lucide-react';
 import Link from 'next/link';
-import { ADMIN_STATS, MOCK_ORDERS, MOCK_PRODUCTS } from '@/lib/mock-data';
+import { ADMIN_STATS, MOCK_ORDERS } from '@/lib/mock-data';
 
 const STAT_CARDS = [
   {
@@ -151,9 +152,19 @@ export default function AdminDashboardPage() {
                               {order.items.slice(0, 2).map((item, i) => (
                                 <div
                                   key={i}
-                                  className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center border-2 border-white"
+                                  className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center border-2 border-white overflow-hidden"
                                 >
-                                  <span className="text-sm">🐟</span>
+                                  {item.product.images?.[0] ? (
+                                    <Image
+                                      src={item.product.images[0]}
+                                      alt={item.product.name_english}
+                                      width={32}
+                                      height={32}
+                                      className="w-full h-full object-cover"
+                                    />
+                                  ) : (
+                                    <span className="text-sm">🐟</span>
+                                  )}
                                 </div>
                               ))}
                             </div>
@@ -230,7 +241,19 @@ export default function AdminDashboardPage() {
                   className="flex items-center justify-between p-2 bg-white rounded-lg"
                 >
                   <div className="flex items-center gap-2">
-                    <span className="text-xl">🐟</span>
+                    <div className="h-10 w-10 rounded-lg bg-slate-100 flex items-center justify-center overflow-hidden flex-shrink-0">
+                      {item.product.images?.[0] ? (
+                        <Image
+                          src={item.product.images[0]}
+                          alt={item.product.name_english}
+                          width={40}
+                          height={40}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-xl">🐟</span>
+                      )}
+                    </div>
                     <div>
                       <p className="text-sm font-medium">{item.product.name_english}</p>
                       <p className="text-xs text-muted-foreground">
@@ -255,8 +278,18 @@ export default function AdminDashboardPage() {
               {ADMIN_STATS.top_products.map((item, index) => (
                 <div key={index} className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-lg bg-slate-100 flex items-center justify-center">
-                      <span className="text-xl">🐟</span>
+                    <div className="h-10 w-10 rounded-lg bg-slate-100 flex items-center justify-center overflow-hidden flex-shrink-0">
+                      {item.product.images?.[0] ? (
+                        <Image
+                          src={item.product.images[0]}
+                          alt={item.product.name_english}
+                          width={40}
+                          height={40}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-xl">🐟</span>
+                      )}
                     </div>
                     <div>
                       <p className="text-sm font-medium">{item.product.name_english}</p>

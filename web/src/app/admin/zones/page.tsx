@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Plus, MapPin, Edit2, Trash2, Eye } from 'lucide-react';
+import { Plus, MapPin, Edit2 } from 'lucide-react';
 import { ZONE_CONFIG } from '@/constants';
 
 export default function AdminZonesPage() {
