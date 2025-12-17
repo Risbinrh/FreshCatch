@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { Header, Footer } from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -111,8 +112,17 @@ export default function CartPage() {
                         {index > 0 && <Separator className="my-4" />}
                         <div className="flex gap-4">
                           {/* Product Image */}
-                          <div className="w-24 h-24 rounded-lg bg-gradient-to-br from-sky-50 to-cyan-50 flex items-center justify-center flex-shrink-0">
-                            <span className="text-4xl">{getProductEmoji(item)}</span>
+                          <div className="w-24 h-24 rounded-lg bg-gradient-to-br from-sky-50 to-cyan-50 flex items-center justify-center flex-shrink-0 relative overflow-hidden">
+                            {item.image ? (
+                              <Image
+                                src={item.image}
+                                alt={item.name}
+                                fill
+                                className="object-contain p-2"
+                              />
+                            ) : (
+                              <span className="text-4xl">{getProductEmoji(item)}</span>
+                            )}
                           </div>
 
                           {/* Product Details */}

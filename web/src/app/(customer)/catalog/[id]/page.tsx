@@ -98,15 +98,25 @@ export default function ProductDetailPage() {
             <div className="space-y-4">
               <Card className="overflow-hidden">
                 <div className="aspect-square bg-gradient-to-br from-sky-50 to-cyan-100 flex items-center justify-center relative">
-                  <span className="text-[150px]">
-                    {product.category_id === 'prawns'
-                      ? '🦐'
-                      : product.category_id === 'crabs'
-                        ? '🦀'
-                        : product.category_id === 'squid'
-                          ? '🦑'
-                          : '🐟'}
-                  </span>
+                  {product.images && product.images.length > 0 ? (
+                    <Image
+                      src={product.images[0]}
+                      alt={product.name_english}
+                      fill
+                      className="object-contain p-4"
+                      priority
+                    />
+                  ) : (
+                    <span className="text-[150px]">
+                      {product.category_id === 'prawns'
+                        ? '🦐'
+                        : product.category_id === 'crabs'
+                          ? '🦀'
+                          : product.category_id === 'squid'
+                            ? '🦑'
+                            : '🐟'}
+                    </span>
+                  )}
                   <Badge className="absolute top-4 left-4 bg-green-500 text-sm px-3 py-1">
                     Fresh Today
                   </Badge>
@@ -124,14 +134,48 @@ export default function ProductDetailPage() {
 
               {/* Thumbnails */}
               <div className="flex gap-2">
-                {[1, 2, 3, 4].map((i) => (
-                  <div
-                    key={i}
-                    className={`w-20 h-20 rounded-lg bg-gradient-to-br from-sky-50 to-cyan-50 flex items-center justify-center cursor-pointer border-2 ${i === 1 ? 'border-primary' : 'border-transparent'
-                      }`}
-                  >
+                {/* Show main product image as first thumbnail */}
+                <div
+                  className={`w-20 h-20 rounded-lg overflow-hidden flex items-center justify-center cursor-pointer border-2 transition-all hover:border-primary/50 border-primary relative bg-white`}
+                >
+                  {product.images && product.images.length > 0 ? (
+                    <Image
+                      src={product.images[0]}
+                      alt={product.name_english}
+                      fill
+                      className="object-contain p-1"
+                    />
+                  ) : (
                     <span className="text-3xl">🐟</span>
-                  </div>
+                  )}
+                </div>
+
+                {/* Show related products as additional thumbnails */}
+                {relatedProducts.slice(0, 3).map((relatedProd) => (
+                  <Link key={relatedProd.id} href={`/catalog/${relatedProd.id}`}>
+                    <div
+                      className={`w-20 h-20 rounded-lg overflow-hidden flex items-center justify-center cursor-pointer border-2 transition-all hover:border-primary border-transparent relative bg-white`}
+                    >
+                      {relatedProd.images && relatedProd.images.length > 0 ? (
+                        <Image
+                          src={relatedProd.images[0]}
+                          alt={relatedProd.name_english}
+                          fill
+                          className="object-contain p-1"
+                        />
+                      ) : (
+                        <span className="text-3xl">
+                          {relatedProd.category_id === 'prawns'
+                            ? '🦐'
+                            : relatedProd.category_id === 'crabs'
+                              ? '🦀'
+                              : relatedProd.category_id === 'squid'
+                                ? '🦑'
+                                : '🐟'}
+                        </span>
+                      )}
+                    </div>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -473,8 +517,17 @@ export default function ProductDetailPage() {
               {relatedProducts.map((p) => (
                 <Link key={p.id} href={`/catalog/${p.id}`}>
                   <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-                    <div className="aspect-square bg-gradient-to-br from-sky-50 to-cyan-50 flex items-center justify-center">
-                      <span className="text-5xl">🐟</span>
+                    <div className="aspect-square bg-gradient-to-br from-sky-50 to-cyan-50 flex items-center justify-center relative">
+                      {p.images && p.images.length > 0 ? (
+                        <Image
+                          src={p.images[0]}
+                          alt={p.name_english}
+                          fill
+                          className="object-cover"
+                        />
+                      ) : (
+                        <span className="text-5xl">🐟</span>
+                      )}
                     </div>
                     <CardContent className="p-3">
                       <h3 className="font-semibold text-sm line-clamp-1">{p.name_english}</h3>
