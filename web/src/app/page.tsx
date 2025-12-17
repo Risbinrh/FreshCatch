@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { Header, Footer } from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -14,46 +15,11 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { FISH_CATEGORIES, DELIVERY_SLOTS } from '@/constants';
+import { MOCK_PRODUCTS, MOCK_RECIPES } from '@/lib/mock-data';
 
-// Mock featured products data
-const FEATURED_PRODUCTS = [
-  {
-    id: '1',
-    name: 'Seer Fish (Vanjaram)',
-    nameTa: 'வஞ்சிரம்',
-    price: 850,
-    image: '🐟',
-    badge: 'Bestseller',
-    rating: 4.8,
-  },
-  {
-    id: '2',
-    name: 'Pomfret (Vaaval)',
-    nameTa: 'வாவல்',
-    price: 650,
-    image: '🐠',
-    badge: 'Fresh Today',
-    rating: 4.7,
-  },
-  {
-    id: '3',
-    name: 'Prawns (Eral)',
-    nameTa: 'இறால்',
-    price: 550,
-    image: '🦐',
-    badge: 'Popular',
-    rating: 4.9,
-  },
-  {
-    id: '4',
-    name: 'King Fish (Neymeen)',
-    nameTa: 'நெய்மீன்',
-    price: 750,
-    image: '🐟',
-    badge: 'Premium',
-    rating: 4.6,
-  },
-];
+// Get featured products and recipes from mock data
+const FEATURED_PRODUCTS = MOCK_PRODUCTS.slice(0, 4);
+const FEATURED_RECIPES = MOCK_RECIPES.slice(0, 2);
 
 // Features
 const FEATURES = [
@@ -216,34 +182,43 @@ export default function HomePage() {
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
               {FEATURED_PRODUCTS.map((product) => (
-                <Card
-                  key={product.id}
-                  className="group overflow-hidden hover:shadow-lg transition-shadow"
-                >
-                  <div className="relative aspect-square bg-gradient-to-br from-sky-50 to-cyan-50 flex items-center justify-center">
-                    <span className="text-6xl group-hover:scale-110 transition-transform">
-                      {product.image}
-                    </span>
-                    <Badge className="absolute top-2 left-2 bg-primary">
-                      {product.badge}
-                    </Badge>
-                  </div>
-                  <CardContent className="p-4">
-                    <h3 className="font-semibold line-clamp-1">{product.name}</h3>
-                    <p className="text-sm text-muted-foreground">{product.nameTa}</p>
-                    <div className="flex items-center gap-1 mt-1">
-                      <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                      <span className="text-xs text-muted-foreground">{product.rating}</span>
+                <Link key={product.id} href={`/catalog/${product.id}`}>
+                  <Card className="group overflow-hidden hover:shadow-lg transition-shadow">
+                    <div className="aspect-square bg-gradient-to-br from-sky-50 to-cyan-50 overflow-hidden">
+                      {product.images?.[0] ? (
+                        <Image
+                          src={product.images[0]}
+                          alt={product.name_english}
+                          width={400}
+                          height={400}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                        />
+                      ) : (
+                        <div className="flex items-center justify-center h-full">
+                          <span className="text-6xl">🐟</span>
+                        </div>
+                      )}
+                      <Badge className="absolute top-2 left-2 bg-primary">
+                        {product.availability_status === 'in_stock' ? 'Fresh Today' : 'Limited'}
+                      </Badge>
                     </div>
-                    <div className="flex items-center justify-between mt-3">
-                      <p className="text-lg font-bold text-primary">
-                        ₹{product.price}
-                        <span className="text-xs font-normal text-muted-foreground">/kg</span>
-                      </p>
-                      <Button size="sm">Add</Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                    <CardContent className="p-4">
+                      <h3 className="font-semibold line-clamp-1">{product.name_english}</h3>
+                      <p className="text-sm text-muted-foreground">{product.name_tamil}</p>
+                      <div className="flex items-center gap-1 mt-1">
+                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                        <span className="text-xs text-muted-foreground">{product.rating}</span>
+                      </div>
+                      <div className="flex items-center justify-between mt-3">
+                        <p className="text-lg font-bold text-primary">
+                          ₹{product.price_per_kg}
+                          <span className="text-xs font-normal text-muted-foreground">/kg</span>
+                        </p>
+                        <Button size="sm">Add</Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
               ))}
             </div>
           </div>
@@ -303,16 +278,25 @@ export default function HomePage() {
                 </Link>
               </div>
               <div className="flex-1 grid grid-cols-2 gap-4">
-                <Card className="overflow-hidden">
-                  <div className="aspect-square bg-gradient-to-br from-orange-100 to-red-100 flex items-center justify-center text-5xl">
-                    🍛
-                  </div>
-                </Card>
-                <Card className="overflow-hidden">
-                  <div className="aspect-square bg-gradient-to-br from-yellow-100 to-orange-100 flex items-center justify-center text-5xl">
-                    🍳
-                  </div>
-                </Card>
+                {FEATURED_RECIPES.map((recipe) => (
+                  <Link key={recipe.id} href={`/recipes/${recipe.id}`}>
+                    <Card className="overflow-hidden hover:shadow-lg transition-shadow group">
+                      <div className="aspect-square bg-gradient-to-br from-orange-100 to-red-100 overflow-hidden">
+                        {recipe.thumbnail ? (
+                          <img
+                            src={recipe.thumbnail}
+                            alt={recipe.title_english}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                          />
+                        ) : (
+                          <div className="flex items-center justify-center h-full text-5xl">
+                            🍳
+                          </div>
+                        )}
+                      </div>
+                    </Card>
+                  </Link>
+                ))}
               </div>
             </div>
           </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import Image from 'next/image';
 import { Header, Footer } from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -275,16 +276,28 @@ export default function CatalogPage() {
                   {filteredProducts.map((product) => (
                     <Link key={product.id} href={`/catalog/${product.id}`}>
                       <Card className="group overflow-hidden hover:shadow-lg transition-all h-full">
-                        <div className="relative aspect-square bg-gradient-to-br from-sky-50 to-cyan-50 flex items-center justify-center">
-                          <span className="text-6xl group-hover:scale-110 transition-transform">
-                            {product.category_id === 'prawns'
-                              ? '🦐'
-                              : product.category_id === 'crabs'
-                              ? '🦀'
-                              : product.category_id === 'squid'
-                              ? '🦑'
-                              : '🐟'}
-                          </span>
+                        <div className="aspect-square bg-gradient-to-br from-sky-50 to-cyan-50 overflow-hidden">
+                          {product.images?.[0] ? (
+                            <Image
+                              src={product.images[0]}
+                              alt={product.name_english}
+                              width={400}
+                              height={400}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                            />
+                          ) : (
+                            <div className="flex items-center justify-center h-full">
+                              <span className="text-6xl">
+                                {product.category_id === 'prawns'
+                                  ? '🦐'
+                                  : product.category_id === 'crabs'
+                                  ? '🦀'
+                                  : product.category_id === 'squid'
+                                  ? '🦑'
+                                  : '🐟'}
+                              </span>
+                            </div>
+                          )}
                           <Badge
                             className={`absolute top-2 left-2 ${
                               product.availability_status === 'in_stock'
@@ -338,14 +351,24 @@ export default function CatalogPage() {
                     <Link key={product.id} href={`/catalog/${product.id}`}>
                       <Card className="overflow-hidden hover:shadow-lg transition-all">
                         <div className="flex">
-                          <div className="w-32 h-32 bg-gradient-to-br from-sky-50 to-cyan-50 flex items-center justify-center flex-shrink-0">
-                            <span className="text-5xl">
-                              {product.category_id === 'prawns'
-                                ? '🦐'
-                                : product.category_id === 'crabs'
-                                ? '🦀'
-                                : '🐟'}
-                            </span>
+                          <div className="w-32 h-32 bg-gradient-to-br from-sky-50 to-cyan-50 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                            {product.images?.[0] ? (
+                              <Image
+                                src={product.images[0]}
+                                alt={product.name_english}
+                                width={128}
+                                height={128}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <span className="text-5xl">
+                                {product.category_id === 'prawns'
+                                  ? '🦐'
+                                  : product.category_id === 'crabs'
+                                  ? '🦀'
+                                  : '🐟'}
+                              </span>
+                            )}
                           </div>
                           <CardContent className="flex-1 p-4 flex flex-col justify-between">
                             <div>
