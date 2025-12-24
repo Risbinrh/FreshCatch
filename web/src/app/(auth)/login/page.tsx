@@ -1,24 +1,63 @@
+/**
+ * Login Page Component
+ * 
+ * This page handles user authentication for FreshCatch.
+ * It supports multiple login methods:
+ * - Phone number + OTP verification (2-step process)
+ * - Quick demo login for testing (Customer & Admin)
+ * - Social login options (Google, Facebook)
+ * 
+ * Authentication Flow:
+ * 1. User enters phone number
+ * 2. OTP is sent (simulated in demo)
+ * 3. User enters 6-digit OTP
+ * 4. User data is stored in localStorage and cookies
+ * 5. User is redirected to home page or admin dashboard
+ * 
+ * The page features a split layout:
+ * - Left side: Branding with animated background and feature highlights (desktop only)
+ * - Right side: Login form with multiple authentication options
+ */
+
 'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+
+// UI Component imports
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
+
+// Icon imports
 import { Fish, Phone, ArrowRight, Loader2, CheckCircle, Zap, User, Waves, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { APP_NAME } from '@/constants';
 
 export default function LoginPage() {
   const router = useRouter();
+
+  // ==================== STATE MANAGEMENT ====================
+  // Controls which step of the login process is displayed
   const [step, setStep] = useState<'phone' | 'otp'>('phone');
+
+  // Stores the user's phone number (10 digits)
   const [phone, setPhone] = useState('');
+
+  // Stores the 6-digit OTP as an array for individual input fields
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
+
+  // Loading state for async operations (login, OTP sending)
   const [isLoading, setIsLoading] = useState(false);
 
-  // Demo login - instant access
+  // ==================== DEMO LOGIN HANDLER ====================
+  /**
+   * Handles instant demo login for testing purposes
+   * Creates a demo user, stores credentials, and redirects to home page
+   * No actual authentication - for demonstration only
+   */
   const handleDemoLogin = () => {
     setIsLoading(true);
     const userData = {
@@ -28,29 +67,45 @@ export default function LoginPage() {
       email: 'priya@demo.com',
       isLoggedIn: true,
     };
+    // Store user data in localStorage for persistence
     localStorage.setItem('freshcatch_user', JSON.stringify(userData));
+    // Also store in cookies for server-side access (7 days expiry)
     document.cookie = `freshcatch_user=${encodeURIComponent(JSON.stringify(userData))}; path=/; max-age=${60 * 60 * 24 * 7}`;
     setTimeout(() => {
-      router.push('/home');
+      router.push('/');
     }, 1000);
   };
 
+  // ==================== OTP SENDING HANDLER ====================
+  /**
+   * Simulates sending OTP to the user's phone number
+   * In production, this would call an API to send actual SMS
+   * Validates phone number length before proceeding
+   */
   const handleSendOTP = () => {
     if (phone.length === 10) {
       setIsLoading(true);
+      // Simulate API call delay
       setTimeout(() => {
         setIsLoading(false);
-        setStep('otp');
+        setStep('otp'); // Move to OTP verification step
       }, 1500);
     }
   };
 
+  // ==================== OTP INPUT HANDLER ====================
+  /**
+   * Handles individual OTP digit input and auto-focus to next field
+   * @param index - Position of the OTP digit (0-5)
+   * @param value - The digit entered by user
+   */
   const handleOTPChange = (index: number, value: string) => {
     if (value.length <= 1) {
       const newOtp = [...otp];
       newOtp[index] = value;
       setOtp(newOtp);
 
+      // Auto-focus next input field when digit is entered
       if (value && index < 5) {
         const nextInput = document.getElementById(`otp-${index + 1}`);
         nextInput?.focus();
@@ -58,6 +113,12 @@ export default function LoginPage() {
     }
   };
 
+  // ==================== OTP VERIFICATION HANDLER ====================
+  /**
+   * Verifies the OTP and logs in the user
+   * In production, this would validate OTP against server
+   * Creates user session and redirects to home page
+   */
   const handleVerifyOTP = () => {
     const otpValue = otp.join('');
     if (otpValue.length === 6) {
@@ -68,14 +129,21 @@ export default function LoginPage() {
         phone: '+91 ' + phone,
         isLoggedIn: true,
       };
+      // Store user credentials
       localStorage.setItem('freshcatch_user', JSON.stringify(userData));
       document.cookie = `freshcatch_user=${encodeURIComponent(JSON.stringify(userData))}; path=/; max-age=${60 * 60 * 24 * 7}`;
       setTimeout(() => {
-        router.push('/home');
+        router.push('/');
       }, 1500);
     }
   };
 
+  // ==================== ADMIN LOGIN HANDLER ====================
+  /**
+   * Handles demo admin login for testing admin dashboard
+   * Creates admin user with super_admin role
+   * Redirects to admin dashboard instead of customer home page
+   */
   const handleAdminLogin = () => {
     setIsLoading(true);
     const adminData = {
@@ -91,9 +159,11 @@ export default function LoginPage() {
     }, 1000);
   };
 
+  // ==================== RENDER ====================
   return (
     <div className="min-h-screen flex relative overflow-hidden">
-      {/* Left Side - Branding */}
+      {/* ==================== LEFT SIDE - BRANDING SECTION ==================== */}
+      {/* Hidden on mobile (lg:flex), shows branding and features on desktop */}
       <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-blue-600 via-cyan-500 to-teal-500 p-12 flex-col justify-between overflow-hidden">
         {/* Animated Background Elements */}
         <div className="absolute inset-0 opacity-10">
@@ -156,7 +226,8 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* Right Side - Login Form */}
+      {/* ==================== RIGHT SIDE - LOGIN FORM SECTION ==================== */}
+      {/* Contains the actual login form with phone/OTP inputs and demo login options */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-gradient-to-br from-slate-50 to-white">
         <div className="w-full max-w-md">
           {/* Mobile Logo */}
@@ -184,7 +255,8 @@ export default function LoginPage() {
                 </p>
               </div>
 
-              {/* Quick Demo Access */}
+              {/* ==================== QUICK DEMO ACCESS ==================== */}
+              {/* Provides instant login buttons for testing customer and admin flows */}
               <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl border border-blue-100">
                 <div className="flex items-center gap-2 mb-3">
                   <Zap className="h-5 w-5 text-blue-600" />
@@ -231,9 +303,11 @@ export default function LoginPage() {
                 </span>
               </div>
 
+              {/* ==================== PHONE NUMBER / OTP INPUT ==================== */}
+              {/* Conditional rendering based on current step */}
               {step === 'phone' ? (
                 <>
-                  {/* Phone Input */}
+                  {/* Phone Number Input Section */}
                   <div className="space-y-2 mb-6">
                     <label className="text-sm font-medium flex items-center gap-2">
                       <Phone className="h-4 w-4 text-blue-600" />
@@ -280,7 +354,8 @@ export default function LoginPage() {
                     </span>
                   </div>
 
-                  {/* Social Login */}
+                  {/* Social Login Options */}
+                  {/* Google and Facebook login buttons (currently trigger demo login) */}
                   <div className="grid grid-cols-2 gap-3 mb-6">
                     <Button variant="outline" className="h-11 border-2" onClick={handleDemoLogin}>
                       <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
@@ -313,7 +388,8 @@ export default function LoginPage() {
                 </>
               ) : (
                 <>
-                  {/* OTP Input */}
+                  {/* OTP Verification Section */}
+                  {/* 6 individual input fields for OTP digits */}
                   <div className="space-y-4 mb-6">
                     <div className="flex justify-center gap-3">
                       {otp.map((digit, index) => (

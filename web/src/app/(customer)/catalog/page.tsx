@@ -25,12 +25,14 @@ import {
   X,
 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { MOCK_PRODUCTS } from '@/lib/mock-data';
 import { FISH_CATEGORIES } from '@/constants';
 import { AddToCartDialog } from '@/components/common/AddToCartDialog';
 import type { FishProduct } from '@/types';
 
 export default function CatalogPage() {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 2000]);
@@ -66,6 +68,14 @@ export default function CatalogPage() {
   const handleAddToCart = (e: React.MouseEvent, product: FishProduct) => {
     e.preventDefault();
     e.stopPropagation();
+
+    // Check if user is logged in
+    const user = localStorage.getItem('freshcatch_user');
+    if (!user) {
+      router.push('/login');
+      return;
+    }
+
     setSelectedProduct(product);
     setShowAddToCartDialog(true);
   };
@@ -78,9 +88,8 @@ export default function CatalogPage() {
         <div className="space-y-2">
           <button
             onClick={() => setSelectedCategory(null)}
-            className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
-              !selectedCategory ? 'bg-primary text-white' : 'hover:bg-slate-100'
-            }`}
+            className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${!selectedCategory ? 'bg-primary text-white' : 'hover:bg-slate-100'
+              }`}
           >
             All Categories
           </button>
@@ -88,9 +97,8 @@ export default function CatalogPage() {
             <button
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
-              className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors flex items-center gap-2 ${
-                selectedCategory === cat.id ? 'bg-primary text-white' : 'hover:bg-slate-100'
-              }`}
+              className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors flex items-center gap-2 ${selectedCategory === cat.id ? 'bg-primary text-white' : 'hover:bg-slate-100'
+                }`}
             >
               <span>{cat.icon}</span>
               <span>{cat.name_en}</span>
@@ -285,50 +293,61 @@ export default function CatalogPage() {
               {viewMode === 'grid' ? (
                 <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
                   {filteredProducts.map((product) => (
-                    <Link key={product.id} href={`/catalog/${product.id}`}>
-                      <Card className="group overflow-hidden hover:shadow-lg transition-all h-full">
-                        <div className="aspect-square bg-gradient-to-br from-sky-50 to-cyan-50 overflow-hidden">
-                          {product.images?.[0] ? (
-                            <Image
-                              src={product.images[0]}
-                              alt={product.name_english}
-                              width={400}
-                              height={400}
-                              className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
-                            />
-                          ) : (
-                            <div className="flex items-center justify-center h-full">
-                              <span className="text-6xl">
-                                {product.category_id === 'prawns'
-                                  ? '🦐'
-                                  : product.category_id === 'crabs'
+                    <Card
+                      key={product.id}
+                      className="group overflow-hidden hover:shadow-lg transition-all h-full relative"
+                    >
+                      <Link href={`/catalog/${product.id}`} className="absolute inset-0 z-10">
+                        <span className="sr-only">View {product.name_english}</span>
+                      </Link>
+                      <div className="aspect-square bg-gradient-to-br from-sky-50 to-cyan-50 overflow-hidden relative">
+                        {product.images?.[0] ? (
+                          <Image
+                            src={product.images[0]}
+                            alt={product.name_english}
+                            width={400}
+                            height={400}
+                            className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
+                          />
+                        ) : (
+                          <div className="flex items-center justify-center h-full">
+                            <span className="text-6xl">
+                              {product.category_id === 'prawns'
+                                ? '🦐'
+                                : product.category_id === 'crabs'
                                   ? '🦀'
                                   : product.category_id === 'squid'
-                                  ? '🦑'
-                                  : '🐟'}
-                              </span>
-                            </div>
-                          )}
-                          <Badge
-                            className={`absolute top-2 left-2 ${
-                              product.availability_status === 'in_stock'
-                                ? 'bg-green-500'
-                                : product.availability_status === 'limited'
-                                ? 'bg-orange-500'
-                                : 'bg-red-500'
+                                    ? '🦑'
+                                    : '🐟'}
+                            </span>
+                          </div>
+                        )}
+                        <Badge
+                          className={`absolute top-2 left-2 ${product.availability_status === 'in_stock'
+                            ? 'bg-green-500'
+                            : product.availability_status === 'limited'
+                              ? 'bg-orange-500'
+                              : 'bg-red-500'
                             }`}
-                          >
-                            {product.availability_status === 'in_stock'
-                              ? 'In Stock'
-                              : product.availability_status === 'limited'
+                        >
+                          {product.availability_status === 'in_stock'
+                            ? 'In Stock'
+                            : product.availability_status === 'limited'
                               ? 'Limited'
                               : 'Out of Stock'}
-                          </Badge>
-                          <button className="absolute top-2 right-2 h-8 w-8 rounded-full bg-white/80 flex items-center justify-center hover:bg-white transition-colors">
-                            <Heart className="h-4 w-4 text-slate-600" />
-                          </button>
-                        </div>
-                        <CardContent className="p-3">
+                        </Badge>
+                        <button
+                          className="absolute top-2 right-2 h-8 w-8 rounded-full bg-white/80 flex items-center justify-center hover:bg-white transition-colors"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                          }}
+                        >
+                          <Heart className="h-4 w-4 text-slate-600" />
+                        </button>
+                      </div>
+                      <CardContent className="p-3">
+                        <div>
                           <h3 className="font-semibold line-clamp-1 text-sm">
                             {product.name_english}
                           </h3>
@@ -340,96 +359,102 @@ export default function CatalogPage() {
                               ({product.reviews_count})
                             </span>
                           </div>
-                          <div className="flex items-center justify-between mt-2">
-                            <p className="font-bold text-primary">
-                              ₹{product.price_per_kg}
-                              <span className="text-xs font-normal text-muted-foreground">
-                                /kg
-                              </span>
-                            </p>
-                            <Button
-                              size="sm"
-                              className="h-8"
-                              onClick={(e) => handleAddToCart(e, product)}
-                            >
-                              <ShoppingCart className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </Link>
+                        </div>
+                        <div className="flex items-center justify-between mt-2">
+                          <p className="font-bold text-primary">
+                            ₹{product.price_per_kg}
+                            <span className="text-xs font-normal text-muted-foreground">
+                              /kg
+                            </span>
+                          </p>
+                          <Button
+                            size="sm"
+                            className="h-8"
+                            onClick={(e) => handleAddToCart(e, product)}
+                          >
+                            <ShoppingCart className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
                   ))}
                 </div>
               ) : (
                 <div className="space-y-4">
                   {filteredProducts.map((product) => (
-                    <Link key={product.id} href={`/catalog/${product.id}`}>
-                      <Card className="overflow-hidden hover:shadow-lg transition-all">
-                        <div className="flex">
-                          <div className="w-32 h-32 bg-gradient-to-br from-sky-50 to-cyan-50 flex items-center justify-center flex-shrink-0 overflow-hidden">
-                            {product.images?.[0] ? (
-                              <Image
-                                src={product.images[0]}
-                                alt={product.name_english}
-                                width={128}
-                                height={128}
-                                className="w-full h-full object-contain"
-                              />
-                            ) : (
-                              <span className="text-5xl">
-                                {product.category_id === 'prawns'
-                                  ? '🦐'
-                                  : product.category_id === 'crabs'
+                    <Card
+                      key={product.id}
+                      className="overflow-hidden hover:shadow-lg transition-all relative"
+                    >
+                      <Link href={`/catalog/${product.id}`} className="absolute inset-0 z-10">
+                        <span className="sr-only">View {product.name_english}</span>
+                      </Link>
+                      <div className="flex">
+                        <div className="w-32 h-32 bg-gradient-to-br from-sky-50 to-cyan-50 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                          {product.images?.[0] ? (
+                            <Image
+                              src={product.images[0]}
+                              alt={product.name_english}
+                              width={128}
+                              height={128}
+                              className="w-full h-full object-contain"
+                            />
+                          ) : (
+                            <span className="text-5xl">
+                              {product.category_id === 'prawns'
+                                ? '🦐'
+                                : product.category_id === 'crabs'
                                   ? '🦀'
                                   : '🐟'}
-                              </span>
-                            )}
-                          </div>
-                          <CardContent className="flex-1 p-4 flex flex-col justify-between">
-                            <div>
-                              <div className="flex items-start justify-between">
+                            </span>
+                          )}
+                        </div>
+                        <CardContent className="flex-1 p-4 flex flex-col justify-between">
+                          <div>
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
                                 <div>
                                   <h3 className="font-semibold">{product.name_english}</h3>
                                   <p className="text-sm text-muted-foreground">
                                     {product.name_tamil}
                                   </p>
                                 </div>
-                                <Badge
-                                  className={
-                                    product.availability_status === 'in_stock'
-                                      ? 'bg-green-500'
-                                      : 'bg-orange-500'
-                                  }
-                                >
-                                  {product.availability_status === 'in_stock'
-                                    ? 'In Stock'
-                                    : 'Limited'}
-                                </Badge>
                               </div>
-                              <div className="flex items-center gap-1 mt-1">
-                                <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                                <span className="text-sm">{product.rating}</span>
-                                <span className="text-sm text-muted-foreground">
-                                  ({product.reviews_count} reviews)
-                                </span>
-                              </div>
+                              <Badge
+                                className={
+                                  product.availability_status === 'in_stock'
+                                    ? 'bg-green-500'
+                                    : 'bg-orange-500'
+                                }
+                              >
+                                {product.availability_status === 'in_stock'
+                                  ? 'In Stock'
+                                  : 'Limited'}
+                              </Badge>
                             </div>
-                            <div className="flex items-center justify-between mt-2">
-                              <p className="text-xl font-bold text-primary">
-                                ₹{product.price_per_kg}
-                                <span className="text-sm font-normal text-muted-foreground">
-                                  /kg
-                                </span>
-                              </p>
-                              <Button onClick={(e) => handleAddToCart(e, product)}>
-                                <ShoppingCart className="h-4 w-4 mr-2" />
-                                Add to Cart
-                              </Button>
+                            <div className="flex items-center gap-1 mt-1">
+                              <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                              <span className="text-sm">{product.rating}</span>
+                              <span className="text-sm text-muted-foreground">
+                                ({product.reviews_count} reviews)
+                              </span>
                             </div>
-                          </CardContent>
-                        </div>
-                      </Card>
-                    </Link>
+                          </div>
+                          <div className="flex items-center justify-between mt-2">
+                            <p className="text-xl font-bold text-primary">
+                              ₹{product.price_per_kg}
+                              <span className="text-sm font-normal text-muted-foreground">
+                                /kg
+                              </span>
+                            </p>
+                            <Button onClick={(e) => handleAddToCart(e, product)}>
+                              <ShoppingCart className="h-4 w-4 mr-2" />
+                              Add to Cart
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </div>
+                    </Card>
                   ))}
                 </div>
               )}

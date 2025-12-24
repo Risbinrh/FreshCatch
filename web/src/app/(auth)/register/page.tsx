@@ -63,7 +63,7 @@ export default function RegisterPage() {
       // Set cookie for middleware
       document.cookie = `freshcatch_user=${encodeURIComponent(JSON.stringify(userData))}; path=/; max-age=${60 * 60 * 24 * 7}`; // 7 days
       setTimeout(() => {
-        window.location.href = '/home';
+        window.location.href = '/';
       }, 1500);
     }
   };
@@ -87,11 +87,10 @@ export default function RegisterPage() {
             {[1, 2, 3, 4].map((s) => (
               <div
                 key={s}
-                className={`flex items-center justify-center h-8 w-8 rounded-full text-sm font-medium ${
-                  s <= step
-                    ? 'bg-primary text-white'
-                    : 'bg-slate-200 text-slate-500'
-                }`}
+                className={`flex items-center justify-center h-8 w-8 rounded-full text-sm font-medium ${s <= step
+                  ? 'bg-primary text-white'
+                  : 'bg-slate-200 text-slate-500'
+                  }`}
               >
                 {s < step ? <CheckCircle className="h-5 w-5" /> : s}
               </div>

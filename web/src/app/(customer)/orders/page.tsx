@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Header, Footer } from '@/components/layout';
 import { Button } from '@/components/ui/button';
@@ -29,6 +30,7 @@ const ORDER_STATUS_CONFIG = {
 };
 
 export default function OrdersPage() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState('all');
 
   const filteredOrders = MOCK_ORDERS.filter((order) => {
@@ -186,12 +188,15 @@ export default function OrdersPage() {
                                 </Button>
                               )}
                             </div>
-                            <Link href={`/orders/${order.id}`}>
-                              <Button variant="ghost" size="sm" className="gap-1">
-                                View Details
-                                <ChevronRight className="h-4 w-4" />
-                              </Button>
-                            </Link>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="gap-1"
+                              onClick={() => router.push(`/orders/${order.id}`)}
+                            >
+                              View Details
+                              <ChevronRight className="h-4 w-4" />
+                            </Button>
                           </div>
                         </div>
                       </CardContent>

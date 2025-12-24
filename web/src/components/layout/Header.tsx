@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -75,9 +76,15 @@ export function Header() {
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link href={isLoggedIn ? "/home" : "/"} className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary">
-              <Fish className="h-6 w-6 text-white" />
+          <Link href="/" className="flex items-center gap-2">
+            <div className="relative h-16 w-40">
+              <Image
+                src="/logo.png"
+                alt={APP_NAME}
+                fill
+                className="object-contain"
+                priority
+              />
             </div>
             <span className="text-xl font-bold text-primary">{APP_NAME}</span>
           </Link>
@@ -134,16 +141,16 @@ export function Header() {
             </DropdownMenu>
 
             {/* Cart */}
-            <Link href="/cart">
-              <Button variant="ghost" size="icon" className="relative">
+            <Button asChild variant="ghost" size="icon" className="relative">
+              <Link href="/cart">
                 <ShoppingCart className="h-5 w-5" />
                 {itemCount > 0 && (
                   <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs">
                     {itemCount}
                   </Badge>
                 )}
-              </Button>
-            </Link>
+              </Link>
+            </Button>
 
             {/* User Menu */}
             {isLoggedIn ? (
@@ -198,9 +205,9 @@ export function Header() {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Link href="/login">
-                <Button size="sm">Login</Button>
-              </Link>
+              <Button asChild size="sm">
+                <Link href="/login">Login</Link>
+              </Button>
             )}
 
             {/* Mobile Menu */}
@@ -248,9 +255,11 @@ export function Header() {
                       Logout
                     </Button>
                   ) : (
-                    <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>
-                      <Button className="mt-4 w-full">Login</Button>
-                    </Link>
+                    <Button asChild className="mt-4 w-full">
+                      <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>
+                        Login
+                      </Link>
+                    </Button>
                   )}
                 </nav>
               </SheetContent>

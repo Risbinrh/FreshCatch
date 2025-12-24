@@ -67,7 +67,7 @@ export interface FishProduct {
   availability_status: 'in_stock' | 'out_of_stock' | 'limited';
   nutritional_info?: NutritionalInfo;
   freshness_date?: Date;
-  fish_type: 'sea' | 'river' | 'prawns' | 'crabs' | 'squid' | 'special';
+  fish_type: 'sea' | 'river' | 'prawns' | 'crabs' | 'squid' | 'special' | 'freshwater';
   is_active: boolean;
 }
 

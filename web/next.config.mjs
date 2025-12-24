@@ -7,6 +7,11 @@ const nextConfig = {
         hostname: 'img.youtube.com',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'static.freshtohome.com',
+        pathname: '/**',
+      },
     ],
   },
 };

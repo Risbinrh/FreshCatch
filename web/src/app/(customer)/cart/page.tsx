@@ -22,24 +22,18 @@ import {
 import Link from 'next/link';
 import { useCart } from '@/contexts/CartContext';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 export default function CartPage() {
+  const router = useRouter();
   const { items, itemCount, subtotal, updateQuantity, removeFromCart, clearCart } = useCart();
   const { language, t } = useLanguage();
   const [couponCode, setCouponCode] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState('');
   const [discountAmount, setDiscountAmount] = useState(0);
 
-  // Function to get emoji based on product name or default to fish
-  const getProductEmoji = (item: any) => {
-    if (!item.name && !item.nameTamil) return '🐟';
-    const name = (item.name || '').toLowerCase();
-    const nameTamil = item.nameTamil || '';
-    if (name.includes('prawn') || nameTamil.includes('இறால்')) return '🦐';
-    if (name.includes('crab') || nameTamil.includes('நண்டு')) return '🦀';
-    if (name.includes('squid') || nameTamil.includes('கணவாய்')) return '🦑';
-    return '🐟';
-  };
+
 
   const applyCoupon = () => {
     if (couponCode.toUpperCase() === 'FIRST50') {
@@ -111,8 +105,19 @@ export default function CartPage() {
                         {index > 0 && <Separator className="my-4" />}
                         <div className="flex gap-4">
                           {/* Product Image */}
-                          <div className="w-24 h-24 rounded-lg bg-gradient-to-br from-sky-50 to-cyan-50 flex items-center justify-center flex-shrink-0">
-                            <span className="text-4xl">{getProductEmoji(item)}</span>
+                          <div className="w-24 h-24 rounded-lg bg-white border flex items-center justify-center flex-shrink-0 overflow-hidden relative">
+                            {item.image ? (
+                              <Image
+                                src={item.image}
+                                alt={language === 'en' ? item.name : item.nameTamil}
+                                fill
+                                className="object-contain p-2"
+                              />
+                            ) : (
+                              <div className="flex items-center justify-center w-full h-full text-muted-foreground bg-slate-50 text-xs">
+                                No Image
+                              </div>
+                            )}
                           </div>
 
                           {/* Product Details */}
@@ -269,12 +274,13 @@ export default function CartPage() {
                       </div>
                     )}
 
-                    <Link href="/checkout">
-                      <Button className="w-full h-12 text-lg">
-                        {t('Proceed to Checkout', 'செக்அவுட் செல்லவும்')}
-                        <ChevronRight className="ml-2 h-5 w-5" />
-                      </Button>
-                    </Link>
+                    <Button
+                      className="w-full h-12 text-lg"
+                      onClick={() => router.push('/checkout')}
+                    >
+                      {t('Proceed to Checkout', 'செக்அவுட் செல்லவும்')}
+                      <ChevronRight className="ml-2 h-5 w-5" />
+                    </Button>
 
                     {/* Delivery Info */}
                     <div className="pt-4 space-y-3 text-sm">

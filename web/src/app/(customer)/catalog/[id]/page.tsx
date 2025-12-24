@@ -43,6 +43,13 @@ export default function ProductDetailPage() {
   const totalPrice = (basePrice + (cleaningOption?.price_modifier || 0)) * quantity;
 
   const handleAddToCart = () => {
+    // Check if user is logged in
+    const user = localStorage.getItem('freshcatch_user');
+    if (!user) {
+      router.push('/login');
+      return;
+    }
+
     if (!cleaningOption) return;
 
     setIsAdding(true);
@@ -93,20 +100,24 @@ export default function ProductDetailPage() {
         </div>
 
         <div className="container mx-auto px-4 py-8">
-          <div className="grid lg:grid-cols-2 gap-8">
+          <div className="grid lg:grid-cols-3 gap-8">
             {/* Product Images */}
             <div className="space-y-4">
               <Card className="overflow-hidden">
                 <div className="aspect-square bg-gradient-to-br from-sky-50 to-cyan-100 flex items-center justify-center relative">
-                  <span className="text-[150px]">
-                    {product.category_id === 'prawns'
-                      ? '🦐'
-                      : product.category_id === 'crabs'
-                        ? '🦀'
-                        : product.category_id === 'squid'
-                          ? '🦑'
-                          : '🐟'}
-                  </span>
+                  {product.images?.[0] ? (
+                    <Image
+                      src={product.images[0]}
+                      alt={product.name_english}
+                      fill
+                      className="object-contain p-4"
+                    />
+                  ) : (
+                    <div className="flex items-center justify-center w-full h-full text-muted-foreground">
+                      No Image Available
+                    </div>
+                  )}
+
                   <Badge className="absolute top-4 left-4 bg-green-500 text-sm px-3 py-1">
                     Fresh Today
                   </Badge>
@@ -127,10 +138,17 @@ export default function ProductDetailPage() {
                 {[1, 2, 3, 4].map((i) => (
                   <div
                     key={i}
-                    className={`w-20 h-20 rounded-lg bg-gradient-to-br from-sky-50 to-cyan-50 flex items-center justify-center cursor-pointer border-2 ${i === 1 ? 'border-primary' : 'border-transparent'
+                    className={`w-20 h-20 rounded-lg bg-white border flex items-center justify-center cursor-pointer overflow-hidden relative ${i === 1 ? 'border-primary ring-1 ring-primary' : 'border-slate-200 hover:border-primary/50'
                       }`}
                   >
-                    <span className="text-3xl">🐟</span>
+                    {product.images?.[0] ? (
+                      <Image
+                        src={product.images[0]}
+                        alt={`${product.name_english} view ${i}`}
+                        fill
+                        className="object-contain p-2"
+                      />
+                    ) : null}
                   </div>
                 ))}
               </div>
@@ -156,12 +174,12 @@ export default function ProductDetailPage() {
 
                 <div className="flex items-center gap-4 mt-3">
                   <div className="flex items-center gap-1">
-                    {[1, 2, 3, 4, 5].map((star) => (
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((star) => (
                       <Star
                         key={star}
                         className={`h-5 w-5 ${star <= Math.floor(product.rating || 0)
-                            ? 'fill-yellow-400 text-yellow-400'
-                            : 'text-slate-300'
+                          ? 'fill-yellow-400 text-yellow-400'
+                          : 'text-slate-300'
                           }`}
                       />
                     ))}
@@ -280,12 +298,12 @@ export default function ProductDetailPage() {
                   </Button>
                 </div>
                 {showViewCart && (
-                  <Link href="/cart" className="block">
-                    <Button variant="outline" size="lg" className="w-full h-12">
+                  <Button asChild variant="outline" size="lg" className="w-full h-12">
+                    <Link href="/cart">
                       View Cart
                       <ChevronRight className="h-4 w-4 ml-2" />
-                    </Button>
-                  </Link>
+                    </Link>
+                  </Button>
                 )}
               </div>
 
@@ -403,8 +421,8 @@ export default function ProductDetailPage() {
                                     <Star
                                       key={j}
                                       className={`h-3 w-3 ${j < review.rating
-                                          ? 'fill-yellow-400 text-yellow-400'
-                                          : 'text-slate-300'
+                                        ? 'fill-yellow-400 text-yellow-400'
+                                        : 'text-slate-300'
                                         }`}
                                     />
                                   ))}
@@ -424,71 +442,88 @@ export default function ProductDetailPage() {
           </div>
 
           {/* Related Recipes */}
-          {relatedRecipes.length > 0 && (
-            <div className="mt-12">
-              <h2 className="text-2xl font-bold mb-6">Recipes with {product.name_english}</h2>
-              <div className="grid md:grid-cols-2 gap-6">
-                {relatedRecipes.map((recipe) => (
-                  <Link key={recipe.id} href={`/recipes/${recipe.id}`}>
-                    <Card className="overflow-hidden hover:shadow-lg transition-shadow group">
-                      <div className="flex">
-                        <div className="relative w-40 h-40 bg-gradient-to-br from-orange-100 to-red-100 flex-shrink-0 overflow-hidden">
-                          {recipe.thumbnail ? (
-                            <Image
-                              src={recipe.thumbnail}
-                              alt={recipe.title_english}
-                              fill
-                              className="object-cover group-hover:scale-105 transition-transform duration-300"
-                            />
-                          ) : (
-                            <div className="flex items-center justify-center h-full">
-                              <span className="text-5xl">🍛</span>
+          {
+            relatedRecipes.length > 0 && (
+              <div className="mt-12">
+                <h2 className="text-2xl font-bold mb-6">Recipes with {product.name_english}</h2>
+                <div className="grid md:grid-cols-2 gap-6">
+                  {relatedRecipes.map((recipe) => (
+                    <Link key={recipe.id} href={`/recipes/${recipe.id}`}>
+                      <Card className="overflow-hidden hover:shadow-lg transition-shadow group">
+                        <div className="flex">
+                          <div className="relative w-40 h-40 bg-gradient-to-br from-orange-100 to-red-100 flex-shrink-0 overflow-hidden">
+                            {recipe.thumbnail ? (
+                              <Image
+                                src={recipe.thumbnail}
+                                alt={recipe.title_english}
+                                fill
+                                className="object-cover group-hover:scale-105 transition-transform duration-300"
+                              />
+                            ) : (
+                              <div className="flex items-center justify-center h-full text-muted-foreground bg-slate-100">
+                                No Image
+                              </div>
+                            )}
+                          </div>
+                          <CardContent className="p-4">
+                            <h3 className="font-semibold">{recipe.title_english}</h3>
+                            <p className="text-sm text-muted-foreground">{recipe.title_tamil}</p>
+                            <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
+                              <span>⏱️ {recipe.cooking_time} mins</span>
+                              <span>👥 {recipe.servings} servings</span>
                             </div>
-                          )}
+                            <div className="flex items-center gap-1 mt-2">
+                              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                              <span className="font-medium">{recipe.rating}</span>
+                            </div>
+                          </CardContent>
                         </div>
-                        <CardContent className="p-4">
-                          <h3 className="font-semibold">{recipe.title_english}</h3>
-                          <p className="text-sm text-muted-foreground">{recipe.title_tamil}</p>
-                          <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
-                            <span>⏱️ {recipe.cooking_time} mins</span>
-                            <span>👥 {recipe.servings} servings</span>
-                          </div>
-                          <div className="flex items-center gap-1 mt-2">
-                            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                            <span className="font-medium">{recipe.rating}</span>
-                          </div>
-                        </CardContent>
-                      </div>
-                    </Card>
-                  </Link>
-                ))}
+                      </Card>
+                    </Link>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )
+          }
 
           {/* Related Products */}
           <div className="mt-12">
             <h2 className="text-2xl font-bold mb-6">You May Also Like</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {relatedProducts.map((p) => (
-                <Link key={p.id} href={`/catalog/${p.id}`}>
-                  <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-                    <div className="aspect-square bg-gradient-to-br from-sky-50 to-cyan-50 flex items-center justify-center">
-                      <span className="text-5xl">🐟</span>
-                    </div>
-                    <CardContent className="p-3">
-                      <h3 className="font-semibold text-sm line-clamp-1">{p.name_english}</h3>
-                      <p className="text-lg font-bold text-primary mt-1">₹{p.price_per_kg}/kg</p>
-                    </CardContent>
-                  </Card>
-                </Link>
+                <Card
+                  key={p.id}
+                  className="overflow-hidden hover:shadow-lg transition-shadow relative"
+                >
+                  <Link href={`/catalog/${p.id}`} className="absolute inset-0 z-10">
+                    <span className="sr-only">View {p.name_english}</span>
+                  </Link>
+                  <div className="aspect-square bg-gradient-to-br from-sky-50 to-cyan-50 flex items-center justify-center overflow-hidden relative">
+                    {p.images?.[0] ? (
+                      <Image
+                        src={p.images[0]}
+                        alt={p.name_english}
+                        fill
+                        className="object-contain p-4 group-hover:scale-110 transition-transform duration-500"
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center w-full h-full text-muted-foreground bg-slate-100">
+                        No Image
+                      </div>
+                    )}
+                  </div>
+                  <CardContent className="p-3">
+                    <h3 className="font-semibold text-sm line-clamp-1">{p.name_english}</h3>
+                    <p className="text-lg font-bold text-primary mt-1">₹{p.price_per_kg}/kg</p>
+                  </CardContent>
+                </Card>
               ))}
             </div>
           </div>
-        </div>
-      </main>
+        </div >
+      </main >
 
       <Footer />
-    </div>
+    </div >
   );
 }
