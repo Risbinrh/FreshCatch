@@ -20,7 +20,6 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { MOCK_RECIPES } from '@/lib/mock-data';
-import type { Recipe } from '@/types';
 
 const DIFFICULTY_CONFIG = {
   easy: { label: 'Easy', color: 'bg-green-500' },

@@ -22,7 +22,6 @@ import {
   Search,
   MapPin,
   ChevronDown,
-  Fish,
   LogOut,
   Package,
   Heart,

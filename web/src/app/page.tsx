@@ -7,18 +7,12 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
   ArrowRight,
-  Truck,
-  Clock,
-  ShieldCheck,
-  Leaf,
-  Star,
-  MapPin,
   ChevronRight,
-  ChevronLeft,
+  Star,
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { FISH_CATEGORIES, DELIVERY_SLOTS } from '@/constants';
+import { DELIVERY_SLOTS } from '@/constants';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { AddToCartDialog } from '@/components/common/AddToCartDialog';
 import { MOCK_PRODUCTS, MOCK_RECIPES } from '@/lib/mock-data';
@@ -80,15 +74,6 @@ export default function HomePage() {
     return () => clearInterval(timer);
   }, [carouselSlides.length]);
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % carouselSlides.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + carouselSlides.length) % carouselSlides.length);
-  };
-
-
   const handleAddClick = (product: typeof FEATURED_PRODUCTS[0]) => {
     // Check if user is logged in
     const user = localStorage.getItem('freshcatch_user');
@@ -99,30 +84,6 @@ export default function HomePage() {
     setSelectedProduct(product);
     setIsDialogOpen(true);
   };
-
-  // Features with bilingual content
-  const FEATURES = [
-    {
-      icon: Leaf,
-      title: t('Farm Fresh', 'புதிய மீன்'),
-      description: t('Directly sourced from fishermen', 'மீனவர்களிடம் இருந்து நேரடியாக'),
-    },
-    {
-      icon: Clock,
-      title: t('Sunrise Delivery', 'சூரிய உதய டெலிவரி'),
-      description: t('Get fresh fish by 6 AM', 'காலை 6 மணிக்குள் புதிய மீன்'),
-    },
-    {
-      icon: Truck,
-      title: t('Free Delivery', 'இலவச டெலிவரி'),
-      description: t('On orders above ₹300', '₹300க்கு மேல் ஆர்டர்களுக்கு'),
-    },
-    {
-      icon: ShieldCheck,
-      title: t('Quality Assured', 'தர உத்தரவாதம்'),
-      description: t('100% freshness guarantee', '100% புதிய உத்தரவாதம்'),
-    },
-  ];
 
   return (
     <div className="min-h-screen flex flex-col">

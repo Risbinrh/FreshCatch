@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Fish, Phone, Mail, MapPin, Facebook, Instagram, Twitter, Youtube } from 'lucide-react';
 import { APP_NAME, APP_TAGLINE } from '@/constants';
 
@@ -118,10 +119,16 @@ export function Footer() {
               © {new Date().getFullYear()} {APP_NAME}. All rights reserved.
             </p>
             <div className="flex items-center gap-4">
-              <img src="/payment/upi.svg" alt="UPI" className="h-6" />
-              <img src="/payment/visa.svg" alt="Visa" className="h-6" />
-              <img src="/payment/mastercard.svg" alt="Mastercard" className="h-6" />
-              <img src="/payment/rupay.svg" alt="RuPay" className="h-6" />
+              {['upi', 'visa', 'mastercard', 'rupay'].map((payment) => (
+                <div key={payment} className="relative h-6 w-10">
+                  <Image
+                    src={`/payment/${payment}.svg`}
+                    alt={payment}
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+              ))}
             </div>
           </div>
         </div>

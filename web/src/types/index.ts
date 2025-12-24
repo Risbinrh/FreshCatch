@@ -69,6 +69,9 @@ export interface FishProduct {
   freshness_date?: Date;
   fish_type: 'sea' | 'river' | 'prawns' | 'crabs' | 'squid' | 'special' | 'freshwater';
   is_active: boolean;
+  rating?: number;
+  reviews_count?: number;
+  best_for?: string[];
 }
 
 export interface Category {

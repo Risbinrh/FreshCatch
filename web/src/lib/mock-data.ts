@@ -1,7 +1,7 @@
 // Comprehensive Mock Data for FreshCatch Demo
-import type { Recipe, Order } from '@/types';
+import type { FishProduct, Recipe, Order } from '@/types';
 
-export const MOCK_PRODUCTS = [
+export const MOCK_PRODUCTS: FishProduct[] = [
   {
     id: '1',
     name_english: 'Emperor / Eari / Sheri / Shaari',

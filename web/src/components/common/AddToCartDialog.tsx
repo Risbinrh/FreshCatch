@@ -10,7 +10,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Badge } from '@/components/ui/badge';
 import { Minus, Plus, ShoppingCart } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -48,7 +47,7 @@ export function AddToCartDialog({ product, open, onOpenChange }: AddToCartDialog
       setQuantity(0.5);
       setUnit('kg');
     }
-  }, [product.id, open]);
+  }, [product.id, open, cleaningOptions]);
 
   const basePrice = unit === 'kg' ? (product.price_per_kg || 0) : (product.price_per_piece || 0);
   const finalPrice = basePrice + (selectedCleaning?.price_modifier || 0);

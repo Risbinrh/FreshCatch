@@ -26,21 +26,45 @@ import { useCart } from '@/contexts/CartContext';
 
 export default function ProductDetailPage() {
   const params = useParams();
+  const id = Array.isArray(params.id) ? params.id[0] : params.id;
   const router = useRouter();
   const { addToCart } = useCart();
-  const product = MOCK_PRODUCTS.find((p) => p.id === params.id) || MOCK_PRODUCTS[0];
-  const relatedRecipes = MOCK_RECIPES.filter((r) => r.fish_product?.id === product.id).slice(0, 2);
+  const product = MOCK_PRODUCTS.find((p) => p.id === id) || MOCK_PRODUCTS[0];
+  const relatedRecipes = product ? MOCK_RECIPES.filter((r) => r.fish_product?.id === product.id).slice(0, 2) : [];
 
+  /* 
+   * FIX: Hooks must be called unconditionally. 
+   * Moving the product check after all hooks.
+   * Using optional chaining in initializers to prevent crashes if product is undefined.
+   */
   const [quantity, setQuantity] = useState(1);
   const [unit, setUnit] = useState<'kg' | 'piece'>('kg');
-  const [selectedCleaning, setSelectedCleaning] = useState(product.cleaning_options[0]?.id || 'whole');
+  // Safe access to cleaning options
+  const [selectedCleaning, setSelectedCleaning] = useState(product?.cleaning_options?.[0]?.id || 'whole');
   const [isFavorite, setIsFavorite] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [showViewCart, setShowViewCart] = useState(false);
 
-  const basePrice = unit === 'kg' ? product.price_per_kg : (product.price_per_piece || product.price_per_kg);
-  const cleaningOption = product.cleaning_options.find((c) => c.id === selectedCleaning);
+  // Derived state requires product
+  const basePrice = product ? (unit === 'kg' ? product.price_per_kg : (product.price_per_piece || product.price_per_kg)) : 0;
+  const cleaningOption = product?.cleaning_options?.find((c) => c.id === selectedCleaning);
   const totalPrice = (basePrice + (cleaningOption?.price_modifier || 0)) * quantity;
+
+  if (!product) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center">
+        <Header />
+        <div className="flex-1 flex flex-col items-center justify-center p-4">
+          <h1 className="text-2xl font-bold mb-4">Product not found</h1>
+          <p className="text-muted-foreground mb-4">The product you are looking for does not exist.</p>
+          <Link href="/catalog" className="text-primary hover:underline">
+            Back to Catalog
+          </Link>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   const handleAddToCart = () => {
     // Check if user is logged in
